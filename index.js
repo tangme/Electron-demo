@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, Menu  } = require('electron');
 const ws = require('nodejs-websocket');
 const ReadDevice = require('./src/main');
 
@@ -7,6 +7,71 @@ const ReadDevice = require('./src/main');
 // 垃圾回收的时候，window对象将会自动的关闭
 let win;
 
+/*------------------------- */
+const template = [
+    // { role: 'appMenu' }
+    ...(process.platform === 'darwin' ? [{
+        label: app.getName(),
+        submenu: [
+            { role: 'about' },
+            { type: 'separator' },
+            { role: 'services' },
+            { type: 'separator' },
+            { role: 'hide' },
+            { role: 'hideothers' },
+            { role: 'unhide' },
+            { type: 'separator' },
+            { role: 'quit' }
+        ]
+    }] : []),
+    // { role: 'fileMenu' }
+    {
+        label: 'File',
+        submenu: [
+            { role: 'quit' },
+            {
+                label:'设置',
+                click(){
+                    // this.settingsWindow = new BrowserWindow({
+                    //     width: Common.WINDOW_SIZE_SETTINGS.width,
+                    //     height: Common.WINDOW_SIZE_SETTINGS.height * 0.9,
+                    //     resizable: false,
+                    //     fullscreenable: false,
+                    //     show: false,
+                    //     frame: true,
+                    //     alwaysOnTop: true,
+                    //     icon: 'assets/icon.png',
+                    //     titleBarStyle: 'hidden',
+                    // });
+                    let winc = new BrowserWindow({ 
+                        width: 400,
+                        height: 300,
+                        resizable: false,
+                        fullscreenable: false,
+                        // show: false,
+                        frame: false,
+                        alwaysOnTop: true, 
+                        titleBarStyle: 'hidden',
+                    });
+                    winc.loadURL('https://github.com')
+                }
+            }
+        ]
+    },
+    {
+        role: 'help',
+        submenu: [
+            {
+                label: 'Learn More',
+                click() { require('electron').shell.openExternalSync('https://electronjs.org') }
+            }
+        ]
+    }
+]
+
+const menu = Menu.buildFromTemplate(template)
+Menu.setApplicationMenu(menu)
+/*----------------------------------- */
 
 function createWindow() {
     // 创建浏览器窗口。
@@ -22,7 +87,7 @@ function createWindow() {
     win.loadFile('index.html')
 
     // 打开开发者工具
-    win.webContents.openDevTools()
+    // win.webContents.openDevTools()
 
     // 当 window 被关闭，这个事件会被触发。
     win.on('closed', () => {
@@ -33,18 +98,28 @@ function createWindow() {
     });
 
     var server = ws.createServer(function(conn) {
-        
-        console.log("New connection")
+
+        win.webContents.send('conn', { con: '连接已成功建立', time: new Date().toLocaleTimeString()});
+
+        //收到信息
         conn.on("text", function(str) {
             console.log("Received " + str);
             ReadDevice.readJsonData((jsonStr)=>{
-                conn.sendText(jsonStr);
-                win.webContents.send('ping', jsonStr);
+                conn.sendText(JSON.stringify(jsonStr));
+                win.webContents.send('afterReadFile', jsonStr);
             });
-        })
+        });
+
+        //关闭
         conn.on("close", function(code, reason) {
+            win.webContents.send('conn', { con: '连接已断开', time: new Date().toLocaleTimeString() });
             console.log("Connection closed")
-        })
+        });
+
+        //错误异常
+        conn.on("error", function (errObj){
+            console.log(errObj);
+        });
     }).listen(8001);
 }
 

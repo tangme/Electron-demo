@@ -4,10 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Hello World!</title>
+    <style>
+        body{margin: 0;padding: 0;}
+        .flex-con {
+            display: flex;
+            position: absolute;
+            width: 100%;
+            height: calc(100% - 150px);
+        }
+
+        .flex-item-grow1 {
+            flex-grow: 1;
+            overflow: auto;
+        }
+
+        .flex-con .flex-item-grow1:not(:last-child) {
+            border-right: 5px solid #ccc;
+            flex-shrink: 0;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Hello World!</h1>
+    <h1>版本信息</h1>
     We are using node
     <script>
         document.write(process.versions.node)
@@ -21,18 +40,39 @@
         document.write(process.versions.electron)
     </script>.
     <hr>
-    <button id="test" type="button">click...</button>
-    <div id="div-show"></div>
+    <div class="flex-con">
+        <div class="flex-item-grow1">
+            <h3>程序日志</h3>
+            <div id="div-program"></div>
+        </div>
+        <div class="flex-item-grow1">
+            <h3>读取内容</h3>
+            <div id="div-readContent"></div>
+        </div>
+    </div>
 </body>
 <script>
-    const divShowDom = document.getElementById('div-show');
-    require('electron').ipcRenderer.on('ping', (event, message) => {
+    const div_program = document.getElementById("div-program");
+    const div_readContent = document.getElementById("div-readContent");
+
+    //连接信息
+    require('electron').ipcRenderer.on('conn', (event, message) => {
+        let tmpDom = document.createElement("p");
+        tmpDom.innerText = `${message.time} ${message.con}`;
+        div_program.appendChild(tmpDom);
+    });
+
+
+    require('electron').ipcRenderer.on('afterReadFile', (event, message) => {
         console.log(event);
-        divShowDom.innerHTML = message;
-    })
-    var btn = document.getElementById('test');
-    btn.addEventListener('click', function () {
-        console.log('---');
+        if(message.code == 0){
+            let tmpDom = document.createElement("p");
+            tmpDom.innerText = message.msg;
+            div_program.appendChild(tmpDom);
+        }else{
+            div_readContent.innerHTML = message.data;
+        }
+        
     });
 
 </script>
