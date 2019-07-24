@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu  } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain  } = require('electron');
 const ws = require('nodejs-websocket');
 const ReadDevice = require('./src/main');
 
@@ -73,6 +73,12 @@ const menu = Menu.buildFromTemplate(template)
 Menu.setApplicationMenu(menu)
 /*----------------------------------- */
 
+ipcMain.on('readFile',(event,data)=>{
+    ReadDevice.readJsonData((jsonStr) => {
+        win.webContents.send('afterReadFile', jsonStr);
+    });
+});
+
 function createWindow() {
     // 创建浏览器窗口。
     win = new BrowserWindow({
@@ -96,6 +102,7 @@ function createWindow() {
         // 与此同时，你应该删除相应的元素。
         win = null
     });
+
 
     var server = ws.createServer(function(conn) {
 

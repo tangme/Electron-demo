@@ -10,6 +10,7 @@
             display: flex;
             position: absolute;
             width: 100%;
+            border-top: 5px solid #ccc;
             height: calc(100% - 150px);
         }
 
@@ -21,6 +22,10 @@
         .flex-con .flex-item-grow1:not(:last-child) {
             border-right: 5px solid #ccc;
             flex-shrink: 0;
+        }
+
+        .headTitle{
+            text-indent: 1em;
         }
     </style>
 </head>
@@ -39,21 +44,26 @@
     <script>
         document.write(process.versions.electron)
     </script>.
-    <hr>
+    <button type="button" class="btn-readTest">读取测试</button>
     <div class="flex-con">
         <div class="flex-item-grow1">
-            <h3>程序日志</h3>
+            <h3 class="headTitle">程序日志 <button type="button" class="btn-clean-log" data-val="div-program">清空日志</button></h3>
             <div id="div-program"></div>
         </div>
         <div class="flex-item-grow1">
-            <h3>读取内容</h3>
+            <h3 class="headTitle">读取内容 <button type="button" class="btn-clean-content" data-val="div-readContent">清空内容</button></h3>
             <div id="div-readContent"></div>
         </div>
     </div>
 </body>
 <script>
+    const { ipcRenderer } = require('electron');
     const div_program = document.getElementById("div-program");
     const div_readContent = document.getElementById("div-readContent");
+    const DOM = {
+        "div-program": div_program,
+        "div-readContent": div_readContent
+    };
 
     //连接信息
     require('electron').ipcRenderer.on('conn', (event, message) => {
@@ -62,7 +72,7 @@
         div_program.appendChild(tmpDom);
     });
 
-
+    //读取信息
     require('electron').ipcRenderer.on('afterReadFile', (event, message) => {
         console.log(event);
         if(message.code == 0){
@@ -75,6 +85,17 @@
         
     });
 
+    //清空按钮事件
+    document.querySelectorAll(".btn-clean-log,.btn-clean-content").forEach(item=>{
+        item.addEventListener("click",()=>{
+            DOM[item.getAttribute('data-val')].innerHTML = '';
+        });
+    });
+
+    //读取测试按钮
+    document.querySelector(".btn-readTest").addEventListener("click",function(){
+        ipcRenderer.send('readFile','readFile');
+    });
 </script>
 
 </html>
