@@ -1,46 +1,28 @@
 <template>
-    <div id="app">
-        <el-container>
-            <el-header style="height:100%;">
-                <top-head></top-head>
-            </el-header>
-            <el-divider></el-divider>
-            <el-main style="padding:0;">
-                <el-row :gutter="10" style="margin:0;">
-                    <el-col :span="12">
-                        <program-log></program-log>
-                    </el-col>
-                    <el-col :span="12">
-                        <read-content></read-content>
-                    </el-col>
-                </el-row>
-            </el-main>
-        </el-container>
-    </div>
+  <div id="app">
+    <router-view/>
+  </div>
 </template>
 
 <script>
-import TopHead from "./views/readfile/head";
-import ProgramLog from "./views/readfile/programLog";
-import ReadContent from "./views/readfile/readContent";
-
+import util from '@/libs/util'
 export default {
-    name: "app",
-    components: {
-        TopHead,
-        ProgramLog,
-        ReadContent
+  name: 'app',
+  watch: {
+    '$i18n.locale': 'i18nHandle'
+  },
+  created () {
+    this.i18nHandle(this.$i18n.locale)
+  },
+  methods: {
+    i18nHandle (val, oldVal) {
+      util.cookies.set('lang', val)
+      document.querySelector('html').setAttribute('lang', val)
     }
-};
+  }
+}
 </script>
 
-<style>
-#app {
-    font-family: "Avenir", Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
-}
+<style lang="scss">
+@import '~@/assets/style/public-class.scss';
 </style>
