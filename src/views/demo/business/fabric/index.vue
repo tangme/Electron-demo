@@ -80,6 +80,7 @@
                         ></el-button>
                     </el-button-group>&nbsp;
                     <el-color-picker
+                        value="transparent"
                         class="btn-text can-hover"
                         style="vertical-align: middle;"
                         :predefine="predefine"
@@ -117,6 +118,7 @@
                         ></el-button>
                     </el-button-group>&nbsp;
                     <el-color-picker
+                        value="transparent"
                         class="btn-text can-hover"
                         style="vertical-align: middle;"
                         :predefine="predefine"
@@ -133,34 +135,95 @@
                     @click="toggleTool('arrowline')"
                 ></el-button>
             </el-popover>
-            <el-popover placement="bottom" trigger="click">
+            <el-popover placement="bottom" trigger="manual" v-model="toolBtns.pencil.active">
                 <div>
                     <el-button-group>
-                        <el-button size="mini" icon="fa fa-circle" class="mini-circle"></el-button>
-                        <el-button size="mini" icon="fa fa-circle"></el-button>
-                        <el-button size="mini" icon="fa fa-circle" class="max-circle"></el-button>
+                        <el-button
+                            size="mini"
+                            icon="fa fa-circle"
+                            class="mini-circle"
+                            @click="toolBtns.pencil.obj.setWidth(1)"
+                        ></el-button>
+                        <el-button
+                            size="mini"
+                            icon="fa fa-circle"
+                            @click="toolBtns.pencil.obj.setWidth(3)"
+                        ></el-button>
+                        <el-button
+                            size="mini"
+                            icon="fa fa-circle"
+                            class="max-circle"
+                            @click="toolBtns.pencil.obj.setWidth(5)"
+                        ></el-button>
                     </el-button-group>&nbsp;
                     <el-color-picker
+                        value="transparent"
                         class="btn-text can-hover"
                         style="vertical-align: middle;"
                         :predefine="predefine"
                         size="mini"
-                        @change="set"
+                        @change="setColor('pencil',$event)"
                     />
                 </div>
                 <el-button
-                    :type="btnPencil.type"
+                    :type="toolBtns.pencil.active?'primary':''"
                     icon="fa fa-pencil"
                     title="画笔工具"
                     slot="reference"
-                    @click="togglePencil"
+                    @click="toggleTool('pencil')"
+                ></el-button>
+            </el-popover>
+            <el-popover placement="bottom" trigger="manual" v-model="toolBtns.text.active">
+                <div>
+                    <el-button-group>
+                        <el-button
+                            size="mini"
+                            icon="fa fa-circle"
+                            class="mini-circle"
+                            @click="toolBtns.text.obj.setStrokeWidth(12)"
+                        ></el-button>
+                        <el-button
+                            size="mini"
+                            icon="fa fa-circle"
+                            @click="toolBtns.text.obj.setStrokeWidth(16)"
+                        ></el-button>
+                        <el-button
+                            size="mini"
+                            icon="fa fa-circle"
+                            class="max-circle"
+                            @click="toolBtns.text.obj.setStrokeWidth(20)"
+                        ></el-button>
+                    </el-button-group>&nbsp;
+                    <el-color-picker
+                        value="transparent"
+                        class="btn-text can-hover"
+                        style="vertical-align: middle;"
+                        :predefine="predefine"
+                        size="mini"
+                        @change="setColor('text',$event)"
+                    />
+                </div>
+                <el-button
+                    :type="toolBtns.text.active?'primary':''"
+                    icon="fa fa-font"
+                    title="文字工具"
+                    slot="reference"
+                    @click="toggleTool('text')"
                 ></el-button>
             </el-popover>
         </el-button-group>
-        <el-button icon="fa fa-save" title="保存" @click="saveImg"></el-button>
+        <el-button-group>
+            <el-button icon="fa fa-undo" title="撤销" @click="undo"></el-button>
+            <el-button icon="fa fa-repeat" title="重做" @click="redo"></el-button>
+            <el-button icon="fa fa-save" title="保存" @click="saveImg"></el-button>
+        </el-button-group>
 
         <br />
         <img src="/image/theme/d2/logo/all.png" id="my-image" />
+        <img
+            src="https://aier-picture-1259589318.cos.ap-chengdu.myqcloud.com/100630100630/1155667283780395010/MZ201912040002/topography_A88J0U2Q.png"
+            id="tanglv"
+        />
         <a href target="_blank" id="test" download="filename.jpg">test-hello</a>
     </div>
 </template>
@@ -169,10 +232,14 @@ import { fabric } from "fabric";
 import { ToolEllipse } from "./tool/ellipse";
 import { ToolRect } from "./tool/rect";
 import { Arrowline } from "./tool/arrowline";
+import { Pencil } from "./tool/pencil";
+import { ToolText } from "./tool/text";
 export default {
     data() {
         return {
             canvas: null,
+            isRedoing: false,
+            h: [],
             toolBtns: {
                 rect: {
                     obj: null,
@@ -194,13 +261,21 @@ export default {
                     getInst: canvas => {
                         return new Arrowline(canvas);
                     }
+                },
+                pencil: {
+                    obj: null,
+                    active: false,
+                    getInst: canvas => {
+                        return new Pencil(canvas);
+                    }
+                },
+                text: {
+                    obj: null,
+                    active: false,
+                    getInst: canvas => {
+                        return new ToolText(canvas);
+                    }
                 }
-                // pencil: { active: false ,getInst:()=>{return new ToolRect()}}
-            },
-            btnPencil: {
-                //画笔工具 按钮
-                type: "",
-                onwork: false
             },
             predefine: [
                 "#ff4500",
@@ -222,26 +297,53 @@ export default {
         fabric.Image.fromURL("/image/theme/d2/logo/all.png", oImg => {
             this.canvas.add(oImg);
         });
-        //通过url 设置背景图片
+        // 通过url 设置背景图片
         this.canvas.setBackgroundImage(
             "/image/theme/d2/logo/all.png",
             this.canvas.renderAll.bind(this.canvas),
             { backgroundImageOpacity: 0.1, backgroundImageStretch: false }
         );
-        // fabric.Image.fromURL(
-        //     "http://a3.att.hudong.com/35/34/19300001295750130986345801104.jpg",
-        //     function(oImg) {
-        //         canvas.add(oImg);
-        //     }
-        // );
+
+        this.canvas.on("mouse:wheel", opt => {
+            var delta = opt.e.deltaY;
+            var pointer = this.canvas.getPointer(opt.e);
+            var zoom = this.canvas.getZoom();
+            zoom = zoom + delta / 200;
+            if (zoom > 20) zoom = 20;
+            if (zoom < 0.01) zoom = 0.01;
+            this.canvas.zoomToPoint(
+                { x: opt.e.offsetX, y: opt.e.offsetY },
+                zoom
+            );
+            opt.e.preventDefault();
+            opt.e.stopPropagation();
+        });
+        this.canvas.on("object:added", () => {
+            if (!this.isRedoing) {
+                this.h = [];
+            }
+            this.isRedoing = false;
+        });
     },
     methods: {
-        setColor(type, color) {
-            this.toolBtns[type].obj.setStroke(color);
+        undo() {
+            if (this.canvas._objects.length > 0) {
+                this.h.push(this.canvas._objects.pop());
+                this.canvas.renderAll();
+            }
         },
-        set(val) {
-            console.log(val);
-            this.toolBtns.rect.obj.setStroke(val);
+        redo() {
+            if (this.h.length > 0) {
+                this.isRedoing = true;
+                this.canvas.add(this.h.pop());
+            }
+        },
+        setColor(type, color) {
+            if (type == "pencil") {
+                this.toolBtns[type].obj.setColor(color);
+            } else {
+                this.toolBtns[type].obj.setStroke(color);
+            }
         },
         toggleTool(type) {
             if (!type) {
@@ -272,21 +374,6 @@ export default {
                     this.toolBtns[type].obj.offWork();
                 }
             }
-        },
-        /**
-         * 启用关闭画笔工具 状态
-         */
-        togglePencil() {
-            if (this.btnPencil.onwork) {
-                //当前为开启，切换至关闭
-                this.canvas.isDrawingMode = false;
-                this.btnPencil.type = "";
-            } else {
-                //当前为关闭，切换至开启
-                this.canvas.isDrawingMode = true;
-                this.btnPencil.type = "primary";
-            }
-            this.btnPencil.onwork = !this.btnPencil.onwork;
         },
         saveImg() {
             var cc = this.canvas.toDataURL({
