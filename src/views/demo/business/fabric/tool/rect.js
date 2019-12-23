@@ -20,6 +20,10 @@ function ToolRect(canvas) {
 }
 ToolRect.prototype.onWork = function() {
     let _this = this;
+    this.canvas.hoverCursor = "crosshair"; //鼠标改为 画笔样式
+    this.canvas.discardActiveObject(); //取消当前激活的对象
+    this.canvas.item(0).selectable = false; //图片不可移动，防止图片跟随鼠标移动
+    this.canvas.renderAll();
     this.canvas.on("mouse:down", function tmpMouseDown(o) {
         _this.onMouseDown(o);
         _this.mouseDownEvent = tmpMouseDown;
@@ -34,6 +38,8 @@ ToolRect.prototype.onWork = function() {
     });
 };
 ToolRect.prototype.offWork = function() {
+    this.canvas.hoverCursor = "move";
+    this.canvas.item(0).selectable = true;
     this.canvas.off("mouse:down", this.mouseDownEvent);
     this.canvas.off("mouse:move", this.mouseMoveEvent);
     this.canvas.off("mouse:up", this.mouseUpEvent);
@@ -55,11 +61,11 @@ ToolRect.prototype.onMouseDown = function(o) {
         fill: "rgba(255,0,0,0)",
         stroke: this.stroke,
         strokeWidth: this.strokeWidth,
-        transparentCorners: false,
-        hasControls: false,
-        hasBorders: false
+        selectable: false,
+        customId: Date.now()
     });
     this.canvas.add(this.rect);
+    this.rect.bringToFront(); //将对象移动至顶层，防止被遮盖
 };
 ToolRect.prototype.onMouseMove = function(o) {
     if (!this.isDrawing) return;
@@ -79,6 +85,43 @@ ToolRect.prototype.onMouseMove = function(o) {
 };
 ToolRect.prototype.onMouseUp = function(o) {
     this.isDrawing = false;
+    //将画布上所有的对象重新组合为新组
+    this.canvas.getObjects().forEach(item => {
+        if (item.get("type") == "group") {
+            this.canvas.setActiveObject(item);
+            this.canvas.renderAll();
+            this.canvas.getActiveObject().toActiveSelection();
+            this.canvas.discardActiveObject();
+            this.canvas.renderAll();
+        }
+    });
+
+    function sortBy(attr, ascORdesc = "asc") {
+        let ascORdescFlag = ascORdesc == "asc" ? 1 : -1;
+        return function sort(before, next) {
+            before = before[attr];
+            next = next[attr];
+            if (before < next) {
+                return -1 * ascORdescFlag;
+            }
+            if (before > next) {
+                return 1 * ascORdescFlag;
+            }
+            return 0;
+        };
+    }
+    var sel = new fabric.ActiveSelection(
+        this.canvas.getObjects().sort(sortBy("customId", "asc")),
+        {
+            canvas: this.canvas
+        }
+    );
+    this.canvas.setActiveObject(sel);
+    this.canvas.getActiveObject().toGroup();
+    this.canvas.discardActiveObject();
+    this.canvas.item(0).hasControls = false;
+    this.canvas.item(0).hasBorders = false;
+    this.canvas.item(0).selectable = false;
 };
 ToolRect.prototype.setStrokeWidth = function(width) {
     if (!width) {

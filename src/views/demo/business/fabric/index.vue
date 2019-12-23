@@ -1,8 +1,12 @@
 <style>
 .canvas-wrap {
-    display: inline-block;
     border: 1px dashed;
 }
+.canvas-container {
+    margin: auto;
+    border: 1px dashed red;
+}
+
 .mini-circle > .fa.fa-circle {
     transform: scale(0.7);
 }
@@ -16,7 +20,7 @@
 <template>
     <div>
         <div class="canvas-wrap">
-            <canvas id="canvas" width="300" height="300"></canvas>
+            <canvas id="canvas" width="800" height="600"></canvas>
         </div>
         <br />
         <el-button-group>
@@ -291,18 +295,30 @@ export default {
     created() {},
     mounted() {
         this.canvas = new fabric.Canvas("canvas", { selection: false });
-        var imgElement = document.getElementById("my-image");
 
         //添加图片
-        fabric.Image.fromURL("/image/theme/d2/logo/all.png", oImg => {
-            this.canvas.add(oImg);
+        fabric.Image.fromURL("/image/testedit.jpg", img => {
+            img.set({
+                customId: Date.now(),
+                hasControls: false,
+                hasBorders: false,
+                selectable: true //When set to `false`, an object can not be selected for modification (using either point-click-based or group-based selection). But events still fire on it.
+                // lockMovementX: true,
+                // lockMovementY: true,
+                // hoverCursor: "crosshair"
+            });
+            img.scaleToWidth(800);
+            this.canvas.add(img).centerObject(img);
         });
+
         // 通过url 设置背景图片
-        this.canvas.setBackgroundImage(
+        /* this.canvas.setBackgroundImage(
             "/image/theme/d2/logo/all.png",
             this.canvas.renderAll.bind(this.canvas),
-            { backgroundImageOpacity: 0.1, backgroundImageStretch: false }
-        );
+            {
+                opacity: 0.8
+            }
+        ); */
 
         this.canvas.on("mouse:wheel", opt => {
             var delta = opt.e.deltaY;
@@ -328,8 +344,13 @@ export default {
     methods: {
         undo() {
             if (this.canvas._objects.length > 0) {
-                this.h.push(this.canvas._objects.pop());
-                this.canvas.renderAll();
+                if (this.canvas._objects[0].get("type") == "image") {
+                    return;
+                }
+                console.log(this.canvas._objects[0].get("type"));
+                this.canvas._objects[0].toActiveSelection();
+                // this.h.push(this.canvas._objects.pop());
+                // this.canvas.renderAll();
             }
         },
         redo() {
@@ -376,7 +397,7 @@ export default {
             }
         },
         saveImg() {
-            var cc = this.canvas.toDataURL({
+            var cc = this.canvas.item(0).toDataURL({
                 format: "jpeg"
             });
             var imgElement = document.getElementById("my-image");
