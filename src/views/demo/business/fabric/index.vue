@@ -233,11 +233,14 @@
 </template>
 <script>
 import { fabric } from "fabric";
-import { ToolEllipse } from "./tool/ellipse";
-import { ToolRect } from "./tool/rect";
-import { Arrowline } from "./tool/arrowline";
-import { Pencil } from "./tool/pencil";
-import { ToolText } from "./tool/text";
+import {
+    ToolEllipse,
+    ToolRect,
+    Arrowline,
+    Pencil,
+    ToolText
+} from "./tool/index";
+
 export default {
     data() {
         return {

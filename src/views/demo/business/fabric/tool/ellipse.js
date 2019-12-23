@@ -1,3 +1,5 @@
+import { brforeDraw, drew } from "./common";
+
 /**
  * @description 椭圆工具类
  * @author tanglv
@@ -21,6 +23,7 @@ function ToolEllipse(canvas) {
 }
 ToolEllipse.prototype.onWork = function() {
     let _this = this;
+    brforeDraw(this.canvas);
     this.canvas.on("mouse:down", function tmpMouseDown(o) {
         _this.onMouseDown(o);
         _this.mouseDownEvent = tmpMouseDown;
@@ -56,7 +59,8 @@ ToolEllipse.prototype.onMouseDown = function(o) {
         stroke: this.stroke,
         strokeWidth: this.strokeWidth,
         hasControls: false,
-        hasBorders: false
+        hasBorders: false,
+        customId: Date.now()
     });
 
     this.canvas.add(this.ellipse);
@@ -66,15 +70,27 @@ ToolEllipse.prototype.onMouseMove = function(o) {
     let pointer = this.canvas.getPointer(o.e);
 
     if (this.origX > pointer.x) {
-        this.ellipse.set({
-            left: Math.abs(pointer.x)
-        });
+        if (pointer.x < 0) {
+            this.ellipse.set({
+                left: pointer.x
+            });
+        } else {
+            this.ellipse.set({
+                left: Math.abs(pointer.x)
+            });
+        }
     }
 
     if (this.origY > pointer.y) {
-        this.ellipse.set({
-            top: Math.abs(pointer.y)
-        });
+        if (pointer.y < 0) {
+            this.ellipse.set({
+                top: pointer.y
+            });
+        } else {
+            this.ellipse.set({
+                top: Math.abs(pointer.y)
+            });
+        }
     }
 
     this.ellipse.set({
@@ -88,6 +104,7 @@ ToolEllipse.prototype.onMouseMove = function(o) {
 };
 ToolEllipse.prototype.onMouseUp = function(o) {
     this.isDrawing = false;
+    drew(this.canvas);
 };
 ToolEllipse.prototype.setStrokeWidth = function(width) {
     if (!width) {

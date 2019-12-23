@@ -1,3 +1,5 @@
+import { brforeDraw, drew } from "./common";
+
 /**
  * @description 矩形工具类
  * @author tanglv
@@ -20,10 +22,7 @@ function ToolRect(canvas) {
 }
 ToolRect.prototype.onWork = function() {
     let _this = this;
-    this.canvas.hoverCursor = "crosshair"; //鼠标改为 画笔样式
-    this.canvas.discardActiveObject(); //取消当前激活的对象
-    this.canvas.item(0).selectable = false; //图片不可移动，防止图片跟随鼠标移动
-    this.canvas.renderAll();
+    brforeDraw(this.canvas);
     this.canvas.on("mouse:down", function tmpMouseDown(o) {
         _this.onMouseDown(o);
         _this.mouseDownEvent = tmpMouseDown;
@@ -72,10 +71,18 @@ ToolRect.prototype.onMouseMove = function(o) {
     let pointer = this.canvas.getPointer(o.e);
 
     if (this.origX > pointer.x) {
-        this.rect.set({ left: Math.abs(pointer.x) });
+        if (pointer.x < 0) {
+            this.rect.set({ left: pointer.x });
+        } else {
+            this.rect.set({ left: Math.abs(pointer.x) });
+        }
     }
     if (this.origY > pointer.y) {
-        this.rect.set({ top: Math.abs(pointer.y) });
+        if (pointer.y < 0) {
+            this.rect.set({ top: pointer.y });
+        } else {
+            this.rect.set({ top: Math.abs(pointer.y) });
+        }
     }
 
     this.rect.set({ width: Math.abs(this.origX - pointer.x) });
@@ -85,43 +92,7 @@ ToolRect.prototype.onMouseMove = function(o) {
 };
 ToolRect.prototype.onMouseUp = function(o) {
     this.isDrawing = false;
-    //将画布上所有的对象重新组合为新组
-    this.canvas.getObjects().forEach(item => {
-        if (item.get("type") == "group") {
-            this.canvas.setActiveObject(item);
-            this.canvas.renderAll();
-            this.canvas.getActiveObject().toActiveSelection();
-            this.canvas.discardActiveObject();
-            this.canvas.renderAll();
-        }
-    });
-
-    function sortBy(attr, ascORdesc = "asc") {
-        let ascORdescFlag = ascORdesc == "asc" ? 1 : -1;
-        return function sort(before, next) {
-            before = before[attr];
-            next = next[attr];
-            if (before < next) {
-                return -1 * ascORdescFlag;
-            }
-            if (before > next) {
-                return 1 * ascORdescFlag;
-            }
-            return 0;
-        };
-    }
-    var sel = new fabric.ActiveSelection(
-        this.canvas.getObjects().sort(sortBy("customId", "asc")),
-        {
-            canvas: this.canvas
-        }
-    );
-    this.canvas.setActiveObject(sel);
-    this.canvas.getActiveObject().toGroup();
-    this.canvas.discardActiveObject();
-    this.canvas.item(0).hasControls = false;
-    this.canvas.item(0).hasBorders = false;
-    this.canvas.item(0).selectable = false;
+    drew(this.canvas);
 };
 ToolRect.prototype.setStrokeWidth = function(width) {
     if (!width) {
