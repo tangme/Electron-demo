@@ -1,3 +1,5 @@
+import { brforeDraw, drew } from "./common";
+
 /**
  * @description 画笔工具类
  * @author tanglv
@@ -13,10 +15,14 @@ function Pencil(canvas) {
     this.canvas.freeDrawingBrush.color = "red";
 }
 Pencil.prototype.onWork = function() {
+    brforeDraw(this.canvas);
     this.canvas.isDrawingMode = true;
 };
 Pencil.prototype.offWork = function() {
     this.canvas.isDrawingMode = false;
+    drew(this.canvas);
+    this.canvas.hoverCursor = "move";
+    this.canvas.item(0).selectable = true;
 };
 Pencil.prototype.setWidth = function(width) {
     if (!width) {

@@ -1,3 +1,5 @@
+import { brforeDraw, drew } from "./common";
+
 /**
  * @description 箭头工具 类
  * @author tanglv
@@ -22,6 +24,7 @@ function Arrowline(canvas) {
     this.stroke = "red";
 }
 Arrowline.prototype.onWork = function() {
+    brforeDraw(this.canvas);
     let _this = this;
     this.canvas.on("mouse:down", function tmpMouseDown(o) {
         _this.onMouseDown(o);
@@ -37,6 +40,8 @@ Arrowline.prototype.onWork = function() {
     });
 };
 Arrowline.prototype.offWork = function() {
+    this.canvas.hoverCursor = "move";
+    this.canvas.item(0).selectable = true;
     this.canvas.off("mouse:down", this.mouseDownEvent);
     this.canvas.off("mouse:move", this.mouseMoveEvent);
     this.canvas.off("mouse:up", this.mouseUpEvent);
@@ -46,12 +51,14 @@ Arrowline.prototype.onMouseDown = function(o) {
     this.isDrawing = true;
     let pointer = this.canvas.getPointer(o.e);
     let points = [pointer.x, pointer.y, pointer.x, pointer.y];
+    let customId = Date.now();
     this.line = new fabric.Line(points, {
         strokeWidth: this.strokeWidth,
         fill: this.stroke,
         stroke: this.stroke,
         originX: "center",
-        originY: "center"
+        originY: "center",
+        customId: customId
         // id: "arrow_line",
         // uuid: generateUUID(),
         // type: "arrow"
@@ -70,7 +77,8 @@ Arrowline.prototype.onMouseDown = function(o) {
         angle: -45,
         width: this.strokeWidth == 1 ? 8 : this.strokeWidth * 4, //20
         height: this.strokeWidth == 1 ? 8 : this.strokeWidth * 4, //20
-        fill: this.stroke
+        fill: this.stroke,
+        customId: customId
         // pointType: "arrow_start",
         // id: "arrow_triangle",
         // uuid: line.uuid
@@ -103,6 +111,7 @@ Arrowline.prototype.onMouseMove = function(o) {
 };
 Arrowline.prototype.onMouseUp = function(o) {
     this.isDrawing = false;
+    drew(this.canvas);
 };
 Arrowline.prototype.setStrokeWidth = function(width) {
     if (!width) {

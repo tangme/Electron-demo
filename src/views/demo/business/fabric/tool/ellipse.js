@@ -38,6 +38,8 @@ ToolEllipse.prototype.onWork = function() {
     });
 };
 ToolEllipse.prototype.offWork = function() {
+    this.canvas.hoverCursor = "move";
+    this.canvas.item(0).selectable = true;
     this.canvas.off("mouse:down", this.mouseDownEvent);
     this.canvas.off("mouse:move", this.mouseMoveEvent);
     this.canvas.off("mouse:up", this.mouseUpEvent);
