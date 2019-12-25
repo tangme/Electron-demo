@@ -143,17 +143,20 @@
                 <div>
                     <el-button-group>
                         <el-button
+                            :type="toggleSize('pencil',1)"
                             size="mini"
                             icon="fa fa-circle"
                             class="mini-circle"
                             @click="toolBtns.pencil.obj.setWidth(1)"
                         ></el-button>
                         <el-button
+                            :type="toggleSize('pencil',3)"
                             size="mini"
                             icon="fa fa-circle"
                             @click="toolBtns.pencil.obj.setWidth(3)"
                         ></el-button>
                         <el-button
+                            :type="toggleSize('pencil',5)"
                             size="mini"
                             icon="fa fa-circle"
                             class="max-circle"
@@ -175,6 +178,44 @@
                     title="画笔工具"
                     slot="reference"
                     @click="toggleTool('pencil')"
+                ></el-button>
+            </el-popover>
+            <el-popover placement="bottom" trigger="manual" v-model="toolBtns.mosaic.active">
+                <div>
+                    <el-button-group>
+                        <el-button
+                            size="mini"
+                            icon="fa fa-circle"
+                            class="mini-circle"
+                            @click="toolBtns.mosaic.obj.setWidth(12)"
+                        ></el-button>
+                        <el-button
+                            size="mini"
+                            icon="fa fa-circle"
+                            @click="toolBtns.mosaic.obj.setWidth(22)"
+                        ></el-button>
+                        <el-button
+                            size="mini"
+                            icon="fa fa-circle"
+                            class="max-circle"
+                            @click="toolBtns.mosaic.obj.setWidth(32)"
+                        ></el-button>
+                    </el-button-group>&nbsp;
+                    <el-color-picker
+                        value="transparent"
+                        class="btn-text can-hover"
+                        style="vertical-align: middle;"
+                        :predefine="predefine"
+                        size="mini"
+                        @change="setColor('mosaic',$event)"
+                    />
+                </div>
+                <el-button
+                    :type="toolBtns.mosaic.active?'primary':''"
+                    icon="fa fa-th"
+                    title="马赛克工具"
+                    slot="reference"
+                    @click="toggleTool('mosaic')"
                 ></el-button>
             </el-popover>
             <el-popover placement="bottom" trigger="manual" v-model="toolBtns.text.active">
@@ -238,6 +279,7 @@ import {
     ToolRect,
     Arrowline,
     Pencil,
+    Mosaic,
     ToolText
 } from "./tool/index";
 
@@ -274,6 +316,13 @@ export default {
                     active: false,
                     getInst: canvas => {
                         return new Pencil(canvas);
+                    }
+                },
+                mosaic: {
+                    obj: null,
+                    active: false,
+                    getInst: canvas => {
+                        return new Mosaic(canvas);
                     }
                 },
                 text: {
@@ -367,6 +416,15 @@ export default {
                 this.toolBtns[type].obj.setColor(color);
             } else {
                 this.toolBtns[type].obj.setStroke(color);
+            }
+        },
+        toggleSize(type, val) {
+            if (!this.toolBtns[type].obj) {
+                return "";
+            } else if (this.toolBtns[type].obj.width == val) {
+                return "primary";
+            } else {
+                return "";
             }
         },
         toggleTool(type) {
