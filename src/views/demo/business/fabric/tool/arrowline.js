@@ -21,7 +21,7 @@ function Arrowline(canvas) {
     this.mouseMoveEvent = null;
     this.mouseUpEvent = null;
     this.size = 1; //箭头大小
-    this.stroke = "red"; //箭头颜色
+    this.color = "red"; //箭头颜色
 }
 Arrowline.prototype.onWork = function() {
     brforeDraw(this.canvas);
@@ -54,8 +54,8 @@ Arrowline.prototype.onMouseDown = function(o) {
     let customId = Date.now();
     this.line = new fabric.Line(points, {
         strokeWidth: this.size,
-        fill: this.stroke,
-        stroke: this.stroke,
+        fill: this.color,
+        stroke: this.color,
         originX: "center",
         originY: "center",
         customId: customId
@@ -77,7 +77,7 @@ Arrowline.prototype.onMouseDown = function(o) {
         angle: -45,
         width: this.size == 1 ? 8 : this.size * 4, //20
         height: this.size == 1 ? 8 : this.size * 4, //20
-        fill: this.stroke,
+        fill: this.color,
         customId: customId
         // pointType: "arrow_start",
         // id: "arrow_triangle",
@@ -119,11 +119,11 @@ Arrowline.prototype.setSize = function(size) {
     }
     this.size = size;
 };
-Arrowline.prototype.setStroke = function(stroke) {
-    if (!stroke) {
-        throw "Rect setStroke must pass stroke param.";
+Arrowline.prototype.setColor = function(color) {
+    if (!color) {
+        throw "Rect setColor must pass color param.";
     }
-    this.stroke = stroke;
+    this.color = color;
 };
 
 var _FabricCalcArrowAngle = function(x1, y1, x2, y2) {

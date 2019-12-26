@@ -421,11 +421,7 @@ export default {
             }
         },
         setColor(type, color) {
-            if (type == "pencil") {
-                this.toolBtns[type].obj.setColor(color);
-            } else {
-                this.toolBtns[type].obj.setStroke(color);
-            }
+            this.toolBtns[type].obj.setColor(color);
         },
         toggleSize(type, val) {
             if (!this.toolBtns[type].obj) {

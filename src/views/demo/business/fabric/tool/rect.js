@@ -18,7 +18,7 @@ function ToolRect(canvas) {
     this.mouseUpEvent = null;
     this.rect = null;
     this.size = 1; //矩形描边大小
-    this.stroke = "red"; //矩形描边颜色
+    this.color = "red"; //矩形描边颜色
 }
 ToolRect.prototype.onWork = function() {
     let _this = this;
@@ -58,7 +58,7 @@ ToolRect.prototype.onMouseDown = function(o) {
         height: pointer.y - this.origY,
         angle: 0,
         fill: "rgba(255,0,0,0)",
-        stroke: this.stroke,
+        stroke: this.color,
         strokeWidth: this.size,
         selectable: false,
         customId: Date.now()
@@ -100,11 +100,11 @@ ToolRect.prototype.setSize = function(size) {
     }
     this.size = size;
 };
-ToolRect.prototype.setStroke = function(stroke) {
-    if (!stroke) {
-        throw "Rect setStroke must pass stroke param.";
+ToolRect.prototype.setColor = function(color) {
+    if (!color) {
+        throw "Rect setColor must pass color param.";
     }
-    this.stroke = stroke;
+    this.color = color;
 };
 
 export { ToolRect };
