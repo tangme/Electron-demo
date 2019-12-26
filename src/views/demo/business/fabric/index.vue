@@ -28,21 +28,24 @@
                 <div>
                     <el-button-group>
                         <el-button
+                            :type="toggleSize('rect',1)"
                             size="mini"
                             icon="fa fa-circle"
                             class="mini-circle"
-                            @click="toolBtns.rect.obj.setStrokeWidth(1)"
+                            @click="toolBtns.rect.obj.setSize(1)"
                         ></el-button>
                         <el-button
+                            :type="toggleSize('rect',3)"
                             size="mini"
                             icon="fa fa-circle"
-                            @click="toolBtns.rect.obj.setStrokeWidth(3)"
+                            @click="toolBtns.rect.obj.setSize(3)"
                         ></el-button>
                         <el-button
+                            :type="toggleSize('rect',5)"
                             size="mini"
                             icon="fa fa-circle"
                             class="max-circle"
-                            @click="toolBtns.rect.obj.setStrokeWidth(5)"
+                            @click="toolBtns.rect.obj.setSize(5)"
                         ></el-button>
                     </el-button-group>
                     <el-color-picker
@@ -66,21 +69,24 @@
                 <div>
                     <el-button-group>
                         <el-button
+                            :type="toggleSize('ellipse',1)"
                             size="mini"
                             icon="fa fa-circle"
                             class="mini-circle"
-                            @click="toolBtns.ellipse.obj.setStrokeWidth(1)"
+                            @click="toolBtns.ellipse.obj.setSize(1)"
                         ></el-button>
                         <el-button
+                            :type="toggleSize('ellipse',3)"
                             size="mini"
                             icon="fa fa-circle"
-                            @click="toolBtns.ellipse.obj.setStrokeWidth(3)"
+                            @click="toolBtns.ellipse.obj.setSize(3)"
                         ></el-button>
                         <el-button
+                            :type="toggleSize('ellipse',5)"
                             size="mini"
                             icon="fa fa-circle"
                             class="max-circle"
-                            @click="toolBtns.ellipse.obj.setStrokeWidth(5)"
+                            @click="toolBtns.ellipse.obj.setSize(5)"
                         ></el-button>
                     </el-button-group>&nbsp;
                     <el-color-picker
@@ -104,21 +110,24 @@
                 <div>
                     <el-button-group>
                         <el-button
+                            :type="toggleSize('arrowline',1)"
                             size="mini"
                             icon="fa fa-circle"
                             class="mini-circle"
-                            @click="toolBtns.arrowline.obj.setStrokeWidth(1)"
+                            @click="toolBtns.arrowline.obj.setSize(1)"
                         ></el-button>
                         <el-button
+                            :type="toggleSize('arrowline',3)"
                             size="mini"
                             icon="fa fa-circle"
-                            @click="toolBtns.arrowline.obj.setStrokeWidth(3)"
+                            @click="toolBtns.arrowline.obj.setSize(3)"
                         ></el-button>
                         <el-button
+                            :type="toggleSize('arrowline',5)"
                             size="mini"
                             icon="fa fa-circle"
                             class="max-circle"
-                            @click="toolBtns.arrowline.obj.setStrokeWidth(5)"
+                            @click="toolBtns.arrowline.obj.setSize(5)"
                         ></el-button>
                     </el-button-group>&nbsp;
                     <el-color-picker
@@ -147,20 +156,20 @@
                             size="mini"
                             icon="fa fa-circle"
                             class="mini-circle"
-                            @click="toolBtns.pencil.obj.setWidth(1)"
+                            @click="toolBtns.pencil.obj.setSize(1)"
                         ></el-button>
                         <el-button
                             :type="toggleSize('pencil',3)"
                             size="mini"
                             icon="fa fa-circle"
-                            @click="toolBtns.pencil.obj.setWidth(3)"
+                            @click="toolBtns.pencil.obj.setSize(3)"
                         ></el-button>
                         <el-button
                             :type="toggleSize('pencil',5)"
                             size="mini"
                             icon="fa fa-circle"
                             class="max-circle"
-                            @click="toolBtns.pencil.obj.setWidth(5)"
+                            @click="toolBtns.pencil.obj.setSize(5)"
                         ></el-button>
                     </el-button-group>&nbsp;
                     <el-color-picker
@@ -421,7 +430,7 @@ export default {
         toggleSize(type, val) {
             if (!this.toolBtns[type].obj) {
                 return "";
-            } else if (this.toolBtns[type].obj.width == val) {
+            } else if (this.toolBtns[type].obj.size == val) {
                 return "primary";
             } else {
                 return "";

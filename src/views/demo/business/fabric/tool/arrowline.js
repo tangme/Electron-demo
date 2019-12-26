@@ -20,8 +20,8 @@ function Arrowline(canvas) {
     this.mouseDownEvent = null;
     this.mouseMoveEvent = null;
     this.mouseUpEvent = null;
-    this.strokeWidth = 1;
-    this.stroke = "red";
+    this.size = 1; //箭头大小
+    this.stroke = "red"; //箭头颜色
 }
 Arrowline.prototype.onWork = function() {
     brforeDraw(this.canvas);
@@ -53,7 +53,7 @@ Arrowline.prototype.onMouseDown = function(o) {
     let points = [pointer.x, pointer.y, pointer.x, pointer.y];
     let customId = Date.now();
     this.line = new fabric.Line(points, {
-        strokeWidth: this.strokeWidth,
+        strokeWidth: this.size,
         fill: this.stroke,
         stroke: this.stroke,
         originX: "center",
@@ -75,8 +75,8 @@ Arrowline.prototype.onMouseDown = function(o) {
         originY: "center",
         selectable: false,
         angle: -45,
-        width: this.strokeWidth == 1 ? 8 : this.strokeWidth * 4, //20
-        height: this.strokeWidth == 1 ? 8 : this.strokeWidth * 4, //20
+        width: this.size == 1 ? 8 : this.size * 4, //20
+        height: this.size == 1 ? 8 : this.size * 4, //20
         fill: this.stroke,
         customId: customId
         // pointType: "arrow_start",
@@ -113,11 +113,11 @@ Arrowline.prototype.onMouseUp = function(o) {
     this.isDrawing = false;
     drew(this.canvas);
 };
-Arrowline.prototype.setStrokeWidth = function(width) {
-    if (!width) {
-        throw "Rect setStrokeWidth must pass width param.";
+Arrowline.prototype.setSize = function(size) {
+    if (!size) {
+        throw "Rect setSize must pass size param.";
     }
-    this.strokeWidth = width;
+    this.size = size;
 };
 Arrowline.prototype.setStroke = function(stroke) {
     if (!stroke) {

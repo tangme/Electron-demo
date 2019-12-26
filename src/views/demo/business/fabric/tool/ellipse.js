@@ -18,8 +18,8 @@ function ToolEllipse(canvas) {
     this.mouseMoveEvent = null;
     this.mouseUpEvent = null;
     this.ellipse = null;
-    this.strokeWidth = 1;
-    this.stroke = "red";
+    this.size = 1; //椭圆描边大小
+    this.stroke = "red"; //椭圆描边颜色
 }
 ToolEllipse.prototype.onWork = function() {
     let _this = this;
@@ -59,7 +59,7 @@ ToolEllipse.prototype.onMouseDown = function(o) {
         transparentCorners: false,
         fill: "rgba(255,0,0,0)",
         stroke: this.stroke,
-        strokeWidth: this.strokeWidth,
+        strokeWidth: this.size,
         hasControls: false,
         hasBorders: false,
         customId: Date.now()
@@ -108,11 +108,11 @@ ToolEllipse.prototype.onMouseUp = function(o) {
     this.isDrawing = false;
     drew(this.canvas);
 };
-ToolEllipse.prototype.setStrokeWidth = function(width) {
-    if (!width) {
-        throw "Rect setStrokeWidth must pass width param.";
+ToolEllipse.prototype.setSize = function(size) {
+    if (!size) {
+        throw "Rect setSize must pass size param.";
     }
-    this.strokeWidth = width;
+    this.size = size;
 };
 ToolEllipse.prototype.setStroke = function(stroke) {
     if (!stroke) {

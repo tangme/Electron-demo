@@ -10,7 +10,7 @@ function Pencil(canvas) {
         throw "canvas is required";
     }
     this.canvas = canvas;
-    this.width = 1; //画笔宽度
+    this.size = 1; //画笔大小
     this.color = "red"; //画笔颜色
 }
 
@@ -19,7 +19,7 @@ Pencil.prototype.onWork = function() {
     // this.canvas.freeDrawingBrush = new fabric["PencilBrush"](this.canvas);
     this.canvas.isDrawingMode = true;
     this.canvas.freeDrawingBrush.color = this.color;
-    this.canvas.freeDrawingBrush.width = this.width;
+    this.canvas.freeDrawingBrush.width = this.size;
 };
 
 Pencil.prototype.offWork = function() {
@@ -29,11 +29,11 @@ Pencil.prototype.offWork = function() {
     this.canvas.item(0).selectable = true;
 };
 
-Pencil.prototype.setWidth = function(width) {
-    if (!width) {
-        throw "Pencil setWidth must pass width param.";
+Pencil.prototype.setSize = function(size) {
+    if (!size) {
+        throw "Pencil setSize must pass size param.";
     }
-    this.canvas.freeDrawingBrush.width = this.width = width;
+    this.canvas.freeDrawingBrush.width = this.size = size;
 };
 
 Pencil.prototype.setColor = function(color) {
