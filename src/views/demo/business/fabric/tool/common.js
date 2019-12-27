@@ -64,4 +64,7 @@ function sortBy(attr, ascORdesc = "asc") {
     };
 }
 
-export { brforeDraw, drew };
+//操作的历史记录
+const HISTORY = [];
+
+export { brforeDraw, drew, HISTORY };

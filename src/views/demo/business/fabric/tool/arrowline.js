@@ -1,4 +1,4 @@
-import { brforeDraw, drew } from "./common";
+import { brforeDraw, drew, HISTORY } from "./common";
 
 /**
  * @description 箭头工具 类
@@ -83,6 +83,7 @@ Arrowline.prototype.onMouseDown = function(o) {
         // id: "arrow_triangle",
         // uuid: line.uuid
     });
+    HISTORY.push(customId);
     this.canvas.add(this.line, this.triangle);
 
     // this.canvas.add(ellipse).setActiveObject(ellipse);

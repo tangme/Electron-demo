@@ -1,4 +1,4 @@
-import { brforeDraw, drew } from "./common";
+import { brforeDraw, drew, HISTORY } from "./common";
 
 /**
  * @description 画笔工具类
@@ -29,9 +29,8 @@ Pencil.prototype.onWork = function() {
 };
 
 Pencil.prototype.onPathCreated = function(o) {
-    console.log("---");
     o.path.customId = Date.now();
-    console.log(o.path);
+    HISTORY.push(o.path.customId);
 };
 
 Pencil.prototype.offWork = function() {

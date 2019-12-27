@@ -1,4 +1,4 @@
-import { brforeDraw, drew } from "./common";
+import { brforeDraw, drew, HISTORY } from "./common";
 
 /**
  * @description 矩形工具类
@@ -64,6 +64,7 @@ ToolRect.prototype.onMouseDown = function(o) {
         customId: Date.now()
     });
     this.canvas.add(this.rect);
+    HISTORY.push(this.rect.customId);
     this.rect.bringToFront(); //将对象移动至顶层，防止被遮盖
 };
 ToolRect.prototype.onMouseMove = function(o) {

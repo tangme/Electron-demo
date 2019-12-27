@@ -294,6 +294,7 @@ import {
     Mosaic,
     ToolText
 } from "./tool/index";
+import { HISTORY } from "./tool/common";
 
 export default {
     data() {
@@ -356,7 +357,9 @@ export default {
             ]
         };
     },
-    created() {},
+    created() {
+        HISTORY.splice(0);
+    },
     mounted() {
         this.canvas = new fabric.Canvas("canvas", { selection: false });
 
@@ -407,7 +410,18 @@ export default {
     },
     methods: {
         undo() {
-            if (this.canvas._objects.length > 0) {
+            if (HISTORY.length > 0) {
+                let delId = HISTORY.pop();
+                let objs = this.canvas
+                    .item(0)
+                    .getObjects()
+                    .filter(item => item.customId === delId);
+                objs.forEach(o => {
+                    this.canvas.item(0).remove(o);
+                });
+                this.canvas.renderAll();
+            }
+            /* if (this.canvas._objects.length > 0) {
                 if (this.canvas._objects[0].get("type") == "image") {
                     return;
                 }
@@ -415,7 +429,7 @@ export default {
                 this.canvas._objects[0].toActiveSelection();
                 // this.h.push(this.canvas._objects.pop());
                 // this.canvas.renderAll();
-            }
+            } */
         },
         redo() {
             if (this.h.length > 0) {

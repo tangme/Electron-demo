@@ -1,4 +1,4 @@
-import { brforeDraw, drew } from "./common";
+import { brforeDraw, drew, HISTORY } from "./common";
 
 function ToolText(canvas) {
     if (!canvas) {
@@ -37,6 +37,7 @@ ToolText.prototype.onMouseDown = function(o) {
             customId: Date.now()
             // objecttype: "text"
         });
+        HISTORY.push(text.customId);
         this.canvas.add(text).setActiveObject(text);
         text.enterEditing();
         // text.set({ fill: "blue" });

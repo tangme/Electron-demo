@@ -1,4 +1,4 @@
-import { brforeDraw, drew } from "./common";
+import { brforeDraw, drew, HISTORY } from "./common";
 
 /**
  * @description 椭圆工具类
@@ -64,7 +64,7 @@ ToolEllipse.prototype.onMouseDown = function(o) {
         hasBorders: false,
         customId: Date.now()
     });
-
+    HISTORY.push(this.ellipse.customId);
     this.canvas.add(this.ellipse);
 };
 ToolEllipse.prototype.onMouseMove = function(o) {

@@ -1,4 +1,4 @@
-import { brforeDraw, drew } from "./common";
+import { brforeDraw, drew, HISTORY } from "./common";
 
 /**
  * @description 马赛克工具类
@@ -37,9 +37,8 @@ Mosaic.prototype.offWork = function() {
     this.canvas.item(0).selectable = true;
 };
 Mosaic.prototype.onPathCreated = function(o) {
-    console.log("---");
     o.path.customId = Date.now();
-    console.log(o.path);
+    HISTORY.push(o.path.customId);
 };
 Mosaic.prototype.setWidth = function(width) {
     if (!width) {
