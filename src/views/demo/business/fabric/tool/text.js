@@ -5,8 +5,8 @@ function ToolText(canvas) {
         throw "canvas is required";
     }
     this.canvas = canvas;
-    this.color = "red";
-    this.fontSize = 12;
+    this.color = "red"; //字体颜色
+    this.size = 12; //字体大小
     this.mouseDownEvent = null;
 }
 ToolText.prototype.onWork = function() {
@@ -32,7 +32,7 @@ ToolText.prototype.onMouseDown = function(o) {
             fontFamily: "arial black",
             left: pointer.x,
             top: pointer.y,
-            fontSize: this.fontSize,
+            fontSize: this.size,
             fill: this.color,
             customId: Date.now()
             // objecttype: "text"
@@ -43,27 +43,27 @@ ToolText.prototype.onMouseDown = function(o) {
         // text.hiddenTextarea.focus();
     }
 };
-ToolText.prototype.setStroke = function(stroke) {
-    if (!stroke) {
-        throw "Rect setStroke must pass stroke param.";
+ToolText.prototype.setColor = function(color) {
+    if (!color) {
+        throw "Rect setColor must pass color param.";
     }
-    this.color = stroke;
+    this.color = color;
     let obj = this.canvas.getActiveObject();
     if (obj) {
         obj.exitEditing();
-        obj.setColor(stroke);
+        obj.setColor(color);
         this.canvas.renderAll();
     }
 };
-ToolText.prototype.setStrokeWidth = function(width) {
-    if (!width) {
-        throw "Rect setStrokeWidth must pass width param.";
+ToolText.prototype.setSize = function(size) {
+    if (!size) {
+        throw "Rect setSize must pass size param.";
     }
-    this.fontSize = width;
+    this.size = size;
     let obj = this.canvas.getActiveObject();
     if (obj) {
         obj.exitEditing();
-        obj.fontSize = width;
+        obj.size = size;
         this.canvas.renderAll();
     }
 };

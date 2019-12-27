@@ -231,21 +231,24 @@
                 <div>
                     <el-button-group>
                         <el-button
+                            :type="toggleSize('text',12)"
                             size="mini"
                             icon="fa fa-circle"
                             class="mini-circle"
-                            @click="toolBtns.text.obj.setStrokeWidth(12)"
+                            @click="toolBtns.text.obj.setSize(12)"
                         ></el-button>
                         <el-button
+                            :type="toggleSize('text',16)"
                             size="mini"
                             icon="fa fa-circle"
-                            @click="toolBtns.text.obj.setStrokeWidth(16)"
+                            @click="toolBtns.text.obj.setSize(16)"
                         ></el-button>
                         <el-button
+                            :type="toggleSize('text',20)"
                             size="mini"
                             icon="fa fa-circle"
                             class="max-circle"
-                            @click="toolBtns.text.obj.setStrokeWidth(20)"
+                            @click="toolBtns.text.obj.setSize(20)"
                         ></el-button>
                     </el-button-group>&nbsp;
                     <el-color-picker
