@@ -16,6 +16,26 @@
 .n-e-arrow > .fa.fa-long-arrow-right {
     transform: rotate(-45deg);
 }
+
+.el-button-group > span {
+    background-color: blue;
+}
+.el-button-group > span:not(:first-child):not(:last-child) > .el-button {
+    /* background-color: red; */
+    border-radius: 0;
+}
+
+.el-button-group > span:not(:last-child) > .el-button {
+    margin-right: -1px;
+}
+.el-button-group > span:first-child > .el-button {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.el-button-group > span:last-child > .el-button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
 </style>
 <template>
     <div>
@@ -268,14 +288,46 @@
                     @click="toggleTool('text')"
                 ></el-button>
             </el-popover>
+            <span>
+                <el-button icon="fa fa-undo" title="撤销" @click="undo"></el-button>
+            </span>
+            <span>
+                <el-dropdown @command="handleFile">
+                    <el-button
+                        icon="el-icon-files"
+                        style="border-top-left-radius: 0;border-bottom-left-radius: 0;"
+                    >
+                        文件
+                        <i class="el-icon-arrow-down el-icon--right"></i>
+                    </el-button>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item command="new">打开新文件</el-dropdown-item>
+                        <el-dropdown-item command="url">在线新文件</el-dropdown-item>
+                        <el-dropdown-item command="save">保存</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+            </span>
         </el-button-group>
-        <el-button-group>
+
+        <!-- <el-button-group>
             <el-button icon="fa fa-undo" title="撤销" @click="undo"></el-button>
             <el-button icon="fa fa-repeat" title="重做" @click="redo"></el-button>
             <el-button icon="fa fa-save" title="保存" @click="saveImg"></el-button>
-        </el-button-group>
+            <el-dropdown @command="handleFile">
+                <el-button icon="el-icon-files">
+                    文件
+                    <i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item command="new">打开新文件</el-dropdown-item>
+                    <el-dropdown-item command="url">在线新文件</el-dropdown-item>
+                    <el-dropdown-item command="save">保存</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+        </el-button-group>-->
 
         <br />
+        <input type="file" id="file" accept="image/*" />
         <img src="/image/theme/d2/logo/all.png" id="my-image" />
         <img
             src="https://aier-picture-1259589318.cos.ap-chengdu.myqcloud.com/100630100630/1155667283780395010/MZ201912040002/topography_A88J0U2Q.png"
@@ -361,22 +413,12 @@ export default {
         HISTORY.splice(0);
     },
     mounted() {
-        this.canvas = new fabric.Canvas("canvas", { selection: false });
-
-        //添加图片
-        fabric.Image.fromURL("/image/testedit.jpg", img => {
-            img.set({
-                customId: Date.now(),
-                hasControls: false,
-                hasBorders: false,
-                selectable: true //When set to `false`, an object can not be selected for modification (using either point-click-based or group-based selection). But events still fire on it.
-                // lockMovementX: true,
-                // lockMovementY: true,
-                // hoverCursor: "crosshair"
-            });
-            img.scaleToWidth(800);
-            this.canvas.add(img).centerObject(img);
+        this.$nextTick(() => {
+            this.initNewFileBtn();
         });
+        this.canvas = new fabric.Canvas("canvas", { selection: false });
+        //添加默认背景图片
+        this.loadFromUrl("/image/testedit.jpg");
 
         // 通过url 设置背景图片
         /* this.canvas.setBackgroundImage(
@@ -409,6 +451,9 @@ export default {
         });
     },
     methods: {
+        /**
+         * 撤销功能
+         */
         undo() {
             if (HISTORY.length > 0) {
                 let delId = HISTORY.pop();
@@ -421,15 +466,6 @@ export default {
                 });
                 this.canvas.renderAll();
             }
-            /* if (this.canvas._objects.length > 0) {
-                if (this.canvas._objects[0].get("type") == "image") {
-                    return;
-                }
-                console.log(this.canvas._objects[0].get("type"));
-                this.canvas._objects[0].toActiveSelection();
-                // this.h.push(this.canvas._objects.pop());
-                // this.canvas.renderAll();
-            } */
         },
         redo() {
             if (this.h.length > 0) {
@@ -437,9 +473,15 @@ export default {
                 this.canvas.add(this.h.pop());
             }
         },
+        /**
+         * 设置工具颜色
+         */
         setColor(type, color) {
             this.toolBtns[type].obj.setColor(color);
         },
+        /**
+         * 设置工具大小按钮选中激活状态
+         */
         toggleSize(type, val) {
             if (!this.toolBtns[type].obj) {
                 return "";
@@ -449,6 +491,9 @@ export default {
                 return "";
             }
         },
+        /**
+         * 设置工具选中激活状态
+         */
         toggleTool(type) {
             if (!type) {
                 throw "toggletool type must be pass.";
@@ -479,6 +524,52 @@ export default {
                 }
             }
         },
+        /**
+         * 初始化本地图片按钮
+         */
+        initNewFileBtn() {
+            let _this = this;
+            document
+                .getElementById("file")
+                .addEventListener("change", function(e) {
+                    _this.canvas.clear();
+                    var file = e.target.files[0];
+                    var reader = new FileReader();
+                    reader.onload = function(f) {
+                        var data = f.target.result;
+                        fabric.Image.fromURL(data, function(img) {
+                            var oImg = img
+                                .set({
+                                    customId: Date.now(),
+                                    hasControls: false,
+                                    hasBorders: false,
+                                    selectable: true
+                                })
+                                .scale(0.9);
+                            oImg.scaleToWidth(800);
+                            _this.canvas.add(oImg).centerObject(oImg);
+                            // _this.canvas.add(oImg).renderAll();
+                            // var a = canvas.setActiveObject(oImg);
+                            // var dataURL = canvas.toDataURL({
+                            //     format: "png",
+                            //     quality: 0.8
+                            // });
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                });
+        },
+        /**
+         * 打开新文件
+         */
+        newFile() {
+            let event = document.createEvent("MouseEvents");
+            event.initMouseEvent("click"); //初始化
+            document.getElementById("file").dispatchEvent(event); //触发Event
+        },
+        /**
+         * 保存图片
+         */
         saveImg() {
             var cc = this.canvas.item(0).toDataURL({
                 format: "jpeg"
@@ -495,6 +586,58 @@ export default {
             event.initMouseEvent("click");
             //触发Event
             test.dispatchEvent(event);
+        },
+        handleFile(command) {
+            switch (command) {
+                case "new":
+                    this.newFile();
+                    break;
+                case "save":
+                    this.saveImg();
+                    break;
+                case "url":
+                    this.openUrl();
+                    break;
+                default:
+                    break;
+            }
+        },
+        loadFromUrl(url) {
+            this.canvas.clear();
+            fabric.Image.fromURL(url, img => {
+                img.set({
+                    customId: Date.now(),
+                    hasControls: false,
+                    hasBorders: false,
+                    selectable: true //When set to `false`, an object can not be selected for modification (using either point-click-based or group-based selection). But events still fire on it.
+                    // lockMovementX: true,
+                    // lockMovementY: true,
+                    // hoverCursor: "crosshair"
+                });
+                img.scaleToWidth(800);
+                this.canvas.add(img).centerObject(img);
+            });
+        },
+        openUrl() {
+            this.$prompt("请输入图片地址", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消"
+                // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+                // inputErrorMessage: "邮箱格式不正确"
+            })
+                .then(({ value }) => {
+                    this.$message({
+                        type: "success",
+                        message: "你的邮箱是: " + value
+                    });
+                    this.loadFromUrl(value);
+                })
+                .catch(() => {
+                    this.$message({
+                        type: "info",
+                        message: "取消输入"
+                    });
+                });
         }
     }
 };
