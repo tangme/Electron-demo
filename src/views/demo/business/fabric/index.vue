@@ -36,279 +36,299 @@
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
+
+.mar-l-5 {
+    margin-left: 5px;
+}
 </style>
 <template>
     <div>
         <div class="canvas-wrap">
             <canvas id="canvas" width="800" height="600"></canvas>
-        </div>
-        <br />
-        <el-button-group>
-            <el-popover placement="bottom" trigger="manual" v-model="toolBtns.rect.active">
-                <div>
-                    <el-button-group>
+            <div style="text-align:center;">
+                <el-button-group>
+                    <el-popover v-model="toolBtns.rect.active" trigger="manual" placement="bottom">
+                        <div>
+                            <el-button-group>
+                                <el-button
+                                    :type="toggleSize('rect', 1)"
+                                    size="mini"
+                                    icon="fa fa-circle"
+                                    class="mini-circle"
+                                    @click="toolBtns.rect.obj.setSize(1)"
+                                ></el-button>
+                                <el-button
+                                    :type="toggleSize('rect', 3)"
+                                    size="mini"
+                                    icon="fa fa-circle"
+                                    @click="toolBtns.rect.obj.setSize(3)"
+                                ></el-button>
+                                <el-button
+                                    :type="toggleSize('rect', 5)"
+                                    size="mini"
+                                    icon="fa fa-circle"
+                                    class="max-circle"
+                                    @click="toolBtns.rect.obj.setSize(5)"
+                                ></el-button>
+                            </el-button-group>
+                            <el-color-picker
+                                value="transparent"
+                                class="btn-text can-hover mar-l-5"
+                                style="vertical-align: middle;"
+                                :predefine="predefine"
+                                size="mini"
+                                @change="setColor('rect', $event)"
+                            />
+                        </div>
                         <el-button
-                            :type="toggleSize('rect',1)"
-                            size="mini"
-                            icon="fa fa-circle"
-                            class="mini-circle"
-                            @click="toolBtns.rect.obj.setSize(1)"
+                            slot="reference"
+                            :type="toolBtns.rect.active ? 'primary' : ''"
+                            icon="fa fa-square-o"
+                            title="矩形工具"
+                            @click="toggleTool('rect')"
                         ></el-button>
-                        <el-button
-                            :type="toggleSize('rect',3)"
-                            size="mini"
-                            icon="fa fa-circle"
-                            @click="toolBtns.rect.obj.setSize(3)"
-                        ></el-button>
-                        <el-button
-                            :type="toggleSize('rect',5)"
-                            size="mini"
-                            icon="fa fa-circle"
-                            class="max-circle"
-                            @click="toolBtns.rect.obj.setSize(5)"
-                        ></el-button>
-                    </el-button-group>
-                    <el-color-picker
-                        value="transparent"
-                        class="btn-text can-hover"
-                        style="vertical-align: middle;"
-                        :predefine="predefine"
-                        size="mini"
-                        @change="setColor('rect',$event)"
-                    />
-                </div>
-                <el-button
-                    :type="toolBtns.rect.active?'primary':''"
-                    icon="fa fa-square-o"
-                    title="矩形工具"
-                    @click="toggleTool('rect')"
-                    slot="reference"
-                ></el-button>
-            </el-popover>
-            <el-popover placement="bottom" trigger="manual" v-model="toolBtns.ellipse.active">
-                <div>
-                    <el-button-group>
-                        <el-button
-                            :type="toggleSize('ellipse',1)"
-                            size="mini"
-                            icon="fa fa-circle"
-                            class="mini-circle"
-                            @click="toolBtns.ellipse.obj.setSize(1)"
-                        ></el-button>
-                        <el-button
-                            :type="toggleSize('ellipse',3)"
-                            size="mini"
-                            icon="fa fa-circle"
-                            @click="toolBtns.ellipse.obj.setSize(3)"
-                        ></el-button>
-                        <el-button
-                            :type="toggleSize('ellipse',5)"
-                            size="mini"
-                            icon="fa fa-circle"
-                            class="max-circle"
-                            @click="toolBtns.ellipse.obj.setSize(5)"
-                        ></el-button>
-                    </el-button-group>&nbsp;
-                    <el-color-picker
-                        value="transparent"
-                        class="btn-text can-hover"
-                        style="vertical-align: middle;"
-                        :predefine="predefine"
-                        size="mini"
-                        @change="setColor('ellipse',$event)"
-                    />
-                </div>
-                <el-button
-                    :type="toolBtns.ellipse.active?'primary':''"
-                    icon="fa fa-circle-o"
-                    title="椭圆工具"
-                    slot="reference"
-                    @click="toggleTool('ellipse')"
-                ></el-button>
-            </el-popover>
-            <el-popover placement="bottom" trigger="manual" v-model="toolBtns.arrowline.active">
-                <div>
-                    <el-button-group>
-                        <el-button
-                            :type="toggleSize('arrowline',1)"
-                            size="mini"
-                            icon="fa fa-circle"
-                            class="mini-circle"
-                            @click="toolBtns.arrowline.obj.setSize(1)"
-                        ></el-button>
-                        <el-button
-                            :type="toggleSize('arrowline',3)"
-                            size="mini"
-                            icon="fa fa-circle"
-                            @click="toolBtns.arrowline.obj.setSize(3)"
-                        ></el-button>
-                        <el-button
-                            :type="toggleSize('arrowline',5)"
-                            size="mini"
-                            icon="fa fa-circle"
-                            class="max-circle"
-                            @click="toolBtns.arrowline.obj.setSize(5)"
-                        ></el-button>
-                    </el-button-group>&nbsp;
-                    <el-color-picker
-                        value="transparent"
-                        class="btn-text can-hover"
-                        style="vertical-align: middle;"
-                        :predefine="predefine"
-                        size="mini"
-                        @change="setColor('arrowline',$event)"
-                    />
-                </div>
-                <el-button
-                    :type="toolBtns.arrowline.active?'primary':''"
-                    class="n-e-arrow"
-                    icon="fa fa-long-arrow-right"
-                    title="箭头工具"
-                    slot="reference"
-                    @click="toggleTool('arrowline')"
-                ></el-button>
-            </el-popover>
-            <el-popover placement="bottom" trigger="manual" v-model="toolBtns.pencil.active">
-                <div>
-                    <el-button-group>
-                        <el-button
-                            :type="toggleSize('pencil',1)"
-                            size="mini"
-                            icon="fa fa-circle"
-                            class="mini-circle"
-                            @click="toolBtns.pencil.obj.setSize(1)"
-                        ></el-button>
-                        <el-button
-                            :type="toggleSize('pencil',3)"
-                            size="mini"
-                            icon="fa fa-circle"
-                            @click="toolBtns.pencil.obj.setSize(3)"
-                        ></el-button>
-                        <el-button
-                            :type="toggleSize('pencil',5)"
-                            size="mini"
-                            icon="fa fa-circle"
-                            class="max-circle"
-                            @click="toolBtns.pencil.obj.setSize(5)"
-                        ></el-button>
-                    </el-button-group>&nbsp;
-                    <el-color-picker
-                        value="transparent"
-                        class="btn-text can-hover"
-                        style="vertical-align: middle;"
-                        :predefine="predefine"
-                        size="mini"
-                        @change="setColor('pencil',$event)"
-                    />
-                </div>
-                <el-button
-                    :type="toolBtns.pencil.active?'primary':''"
-                    icon="fa fa-pencil"
-                    title="画笔工具"
-                    slot="reference"
-                    @click="toggleTool('pencil')"
-                ></el-button>
-            </el-popover>
-            <el-popover placement="bottom" trigger="manual" v-model="toolBtns.mosaic.active">
-                <div>
-                    <el-button-group>
-                        <el-button
-                            size="mini"
-                            icon="fa fa-circle"
-                            class="mini-circle"
-                            @click="toolBtns.mosaic.obj.setWidth(12)"
-                        ></el-button>
-                        <el-button
-                            size="mini"
-                            icon="fa fa-circle"
-                            @click="toolBtns.mosaic.obj.setWidth(22)"
-                        ></el-button>
-                        <el-button
-                            size="mini"
-                            icon="fa fa-circle"
-                            class="max-circle"
-                            @click="toolBtns.mosaic.obj.setWidth(32)"
-                        ></el-button>
-                    </el-button-group>&nbsp;
-                    <el-color-picker
-                        value="transparent"
-                        class="btn-text can-hover"
-                        style="vertical-align: middle;"
-                        :predefine="predefine"
-                        size="mini"
-                        @change="setColor('mosaic',$event)"
-                    />
-                </div>
-                <el-button
-                    :type="toolBtns.mosaic.active?'primary':''"
-                    icon="fa fa-th"
-                    title="马赛克工具"
-                    slot="reference"
-                    @click="toggleTool('mosaic')"
-                ></el-button>
-            </el-popover>
-            <el-popover placement="bottom" trigger="manual" v-model="toolBtns.text.active">
-                <div>
-                    <el-button-group>
-                        <el-button
-                            :type="toggleSize('text',12)"
-                            size="mini"
-                            icon="fa fa-circle"
-                            class="mini-circle"
-                            @click="toolBtns.text.obj.setSize(12)"
-                        ></el-button>
-                        <el-button
-                            :type="toggleSize('text',16)"
-                            size="mini"
-                            icon="fa fa-circle"
-                            @click="toolBtns.text.obj.setSize(16)"
-                        ></el-button>
-                        <el-button
-                            :type="toggleSize('text',20)"
-                            size="mini"
-                            icon="fa fa-circle"
-                            class="max-circle"
-                            @click="toolBtns.text.obj.setSize(20)"
-                        ></el-button>
-                    </el-button-group>&nbsp;
-                    <el-color-picker
-                        value="transparent"
-                        class="btn-text can-hover"
-                        style="vertical-align: middle;"
-                        :predefine="predefine"
-                        size="mini"
-                        @change="setColor('text',$event)"
-                    />
-                </div>
-                <el-button
-                    :type="toolBtns.text.active?'primary':''"
-                    icon="fa fa-font"
-                    title="文字工具"
-                    slot="reference"
-                    @click="toggleTool('text')"
-                ></el-button>
-            </el-popover>
-            <span>
-                <el-button icon="fa fa-undo" title="撤销" @click="undo"></el-button>
-            </span>
-            <span>
-                <el-dropdown @command="handleFile">
-                    <el-button
-                        icon="el-icon-files"
-                        style="border-top-left-radius: 0;border-bottom-left-radius: 0;"
+                    </el-popover>
+                    <el-popover
+                        v-model="toolBtns.ellipse.active"
+                        trigger="manual"
+                        placement="bottom"
                     >
-                        文件
-                        <i class="el-icon-arrow-down el-icon--right"></i>
-                    </el-button>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="new">打开新文件</el-dropdown-item>
-                        <el-dropdown-item command="url">在线新文件</el-dropdown-item>
-                        <el-dropdown-item command="save">保存</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-            </span>
-        </el-button-group>
-
+                        <div>
+                            <el-button-group>
+                                <el-button
+                                    :type="toggleSize('ellipse', 1)"
+                                    size="mini"
+                                    icon="fa fa-circle"
+                                    class="mini-circle"
+                                    @click="toolBtns.ellipse.obj.setSize(1)"
+                                ></el-button>
+                                <el-button
+                                    :type="toggleSize('ellipse', 3)"
+                                    size="mini"
+                                    icon="fa fa-circle"
+                                    @click="toolBtns.ellipse.obj.setSize(3)"
+                                ></el-button>
+                                <el-button
+                                    :type="toggleSize('ellipse', 5)"
+                                    size="mini"
+                                    icon="fa fa-circle"
+                                    class="max-circle"
+                                    @click="toolBtns.ellipse.obj.setSize(5)"
+                                ></el-button>
+                            </el-button-group>
+                            <el-color-picker
+                                value="transparent"
+                                class="btn-text can-hover mar-l-5"
+                                style="vertical-align: middle;"
+                                :predefine="predefine"
+                                size="mini"
+                                @change="setColor('ellipse', $event)"
+                            />
+                        </div>
+                        <el-button
+                            slot="reference"
+                            :type="toolBtns.ellipse.active ? 'primary' : ''"
+                            icon="fa fa-circle-o"
+                            title="椭圆工具"
+                            @click="toggleTool('ellipse')"
+                        ></el-button>
+                    </el-popover>
+                    <el-popover
+                        v-model="toolBtns.arrowline.active"
+                        trigger="manual"
+                        placement="bottom"
+                    >
+                        <div>
+                            <el-button-group>
+                                <el-button
+                                    :type="toggleSize('arrowline', 1)"
+                                    size="mini"
+                                    icon="fa fa-circle"
+                                    class="mini-circle"
+                                    @click="toolBtns.arrowline.obj.setSize(1)"
+                                ></el-button>
+                                <el-button
+                                    :type="toggleSize('arrowline', 3)"
+                                    size="mini"
+                                    icon="fa fa-circle"
+                                    @click="toolBtns.arrowline.obj.setSize(3)"
+                                ></el-button>
+                                <el-button
+                                    :type="toggleSize('arrowline', 5)"
+                                    size="mini"
+                                    icon="fa fa-circle"
+                                    class="max-circle"
+                                    @click="toolBtns.arrowline.obj.setSize(5)"
+                                ></el-button>
+                            </el-button-group>
+                            <el-color-picker
+                                value="transparent"
+                                class="btn-text can-hover mar-l-5"
+                                style="vertical-align: middle;"
+                                :predefine="predefine"
+                                size="mini"
+                                @change="setColor('arrowline', $event)"
+                            />
+                        </div>
+                        <el-button
+                            slot="reference"
+                            :type="toolBtns.arrowline.active ? 'primary' : ''"
+                            class="n-e-arrow"
+                            icon="fa fa-long-arrow-right"
+                            title="箭头工具"
+                            @click="toggleTool('arrowline')"
+                        ></el-button>
+                    </el-popover>
+                    <el-popover
+                        v-model="toolBtns.pencil.active"
+                        trigger="manual"
+                        placement="bottom"
+                    >
+                        <div>
+                            <el-button-group>
+                                <el-button
+                                    :type="toggleSize('pencil', 1)"
+                                    size="mini"
+                                    icon="fa fa-circle"
+                                    class="mini-circle"
+                                    @click="toolBtns.pencil.obj.setSize(1)"
+                                ></el-button>
+                                <el-button
+                                    :type="toggleSize('pencil', 3)"
+                                    size="mini"
+                                    icon="fa fa-circle"
+                                    @click="toolBtns.pencil.obj.setSize(3)"
+                                ></el-button>
+                                <el-button
+                                    :type="toggleSize('pencil', 5)"
+                                    size="mini"
+                                    icon="fa fa-circle"
+                                    class="max-circle"
+                                    @click="toolBtns.pencil.obj.setSize(5)"
+                                ></el-button>
+                            </el-button-group>
+                            <el-color-picker
+                                value="transparent"
+                                class="btn-text can-hover mar-l-5"
+                                style="vertical-align: middle;"
+                                :predefine="predefine"
+                                size="mini"
+                                @change="setColor('pencil', $event)"
+                            />
+                        </div>
+                        <el-button
+                            slot="reference"
+                            :type="toolBtns.pencil.active ? 'primary' : ''"
+                            icon="fa fa-pencil"
+                            title="画笔工具"
+                            @click="toggleTool('pencil')"
+                        ></el-button>
+                    </el-popover>
+                    <el-popover
+                        v-model="toolBtns.mosaic.active"
+                        trigger="manual"
+                        placement="bottom"
+                    >
+                        <div>
+                            <el-button-group>
+                                <el-button
+                                    size="mini"
+                                    icon="fa fa-circle"
+                                    class="mini-circle"
+                                    @click="toolBtns.mosaic.obj.setWidth(12)"
+                                ></el-button>
+                                <el-button
+                                    size="mini"
+                                    icon="fa fa-circle"
+                                    @click="toolBtns.mosaic.obj.setWidth(22)"
+                                ></el-button>
+                                <el-button
+                                    size="mini"
+                                    icon="fa fa-circle"
+                                    class="max-circle"
+                                    @click="toolBtns.mosaic.obj.setWidth(32)"
+                                ></el-button>
+                            </el-button-group>
+                            <el-color-picker
+                                value="transparent"
+                                class="btn-text can-hover mar-l-5"
+                                style="vertical-align: middle;"
+                                :predefine="predefine"
+                                size="mini"
+                                @change="setColor('mosaic', $event)"
+                            />
+                        </div>
+                        <el-button
+                            slot="reference"
+                            :type="toolBtns.mosaic.active ? 'primary' : ''"
+                            icon="fa fa-th"
+                            title="马赛克工具"
+                            @click="toggleTool('mosaic')"
+                        ></el-button>
+                    </el-popover>
+                    <el-popover v-model="toolBtns.text.active" trigger="manual" placement="bottom">
+                        <div>
+                            <el-button-group>
+                                <el-button
+                                    :type="toggleSize('text', 12)"
+                                    size="mini"
+                                    icon="fa fa-circle"
+                                    class="mini-circle"
+                                    @click="toolBtns.text.obj.setSize(12)"
+                                ></el-button>
+                                <el-button
+                                    :type="toggleSize('text', 16)"
+                                    size="mini"
+                                    icon="fa fa-circle"
+                                    @click="toolBtns.text.obj.setSize(16)"
+                                ></el-button>
+                                <el-button
+                                    :type="toggleSize('text', 20)"
+                                    size="mini"
+                                    icon="fa fa-circle"
+                                    class="max-circle"
+                                    @click="toolBtns.text.obj.setSize(20)"
+                                ></el-button>
+                            </el-button-group>
+                            <el-color-picker
+                                value="transparent"
+                                class="btn-text can-hover mar-l-5"
+                                style="vertical-align: middle;"
+                                :predefine="predefine"
+                                size="mini"
+                                @change="setColor('text', $event)"
+                            />
+                        </div>
+                        <el-button
+                            slot="reference"
+                            :type="toolBtns.text.active ? 'primary' : ''"
+                            icon="fa fa-font"
+                            title="文字工具"
+                            @click="toggleTool('text')"
+                        ></el-button>
+                    </el-popover>
+                    <span>
+                        <el-button icon="fa fa-undo" title="撤销" @click="undo"></el-button>
+                    </span>
+                    <span>
+                        <el-dropdown @command="handleFile">
+                            <el-button
+                                icon="el-icon-files"
+                                style="border-top-left-radius: 0;border-bottom-left-radius: 0;"
+                            >
+                                文件
+                                <i class="el-icon-arrow-down el-icon--right"></i>
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="new">打开新文件</el-dropdown-item>
+                                <el-dropdown-item command="url">在线新文件</el-dropdown-item>
+                                <el-dropdown-item command="save">保存</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </span>
+                </el-button-group>
+            </div>
+        </div>
         <!-- <el-button-group>
             <el-button icon="fa fa-undo" title="撤销" @click="undo"></el-button>
             <el-button icon="fa fa-repeat" title="重做" @click="redo"></el-button>
@@ -327,13 +347,13 @@
         </el-button-group>-->
 
         <br />
-        <input type="file" id="file" accept="image/*" />
-        <img src="/image/theme/d2/logo/all.png" id="my-image" />
+        <input id="file" type="file" accept="image/*" />
+        <img id="my-image" src="/image/theme/d2/logo/all.png" />
         <img
-            src="https://aier-picture-1259589318.cos.ap-chengdu.myqcloud.com/100630100630/1155667283780395010/MZ201912040002/topography_A88J0U2Q.png"
             id="tanglv"
+            src="https://aier-picture-1259589318.cos.ap-chengdu.myqcloud.com/100630100630/1155667283780395010/MZ201912040002/topography_A88J0U2Q.png"
         />
-        <a href target="_blank" id="test" download="filename.jpg">test-hello</a>
+        <a id="test" href target="_blank" download="filename.jpg">test-hello</a>
     </div>
 </template>
 <script>
@@ -417,6 +437,7 @@ export default {
             this.initNewFileBtn();
         });
         this.canvas = new fabric.Canvas("canvas", { selection: false });
+
         //添加默认背景图片
         this.loadFromUrl("/image/testedit.jpg");
 
@@ -617,6 +638,7 @@ export default {
                 img.scaleToWidth(800);
                 this.canvas.add(img).centerObject(img);
             });
+            this.canvas.backgroundColor = "#000000";
         },
         openUrl() {
             this.$prompt("请输入图片地址", "提示", {
