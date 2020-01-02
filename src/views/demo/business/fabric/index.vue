@@ -44,12 +44,18 @@
 <template>
     <div>
         <div class="canvas-wrap">
+            <tool-bar></tool-bar>
             <canvas id="canvas" width="800" height="600"></canvas>
             <div style="text-align:center;">
                 <el-button-group>
                     <el-popover v-model="toolBtns.rect.active" trigger="manual" placement="bottom">
                         <div>
-                            <el-button-group>
+                            <size-picker
+                                v-model="toolBtns.rect.obj"
+                                :size="[2,6,10]"
+                                @click="toolBtns.rect.obj.setSize($event)"
+                            ></size-picker>
+                            <!-- <el-button-group>
                                 <el-button
                                     :type="toggleSize('rect', 1)"
                                     size="mini"
@@ -70,7 +76,7 @@
                                     class="max-circle"
                                     @click="toolBtns.rect.obj.setSize(5)"
                                 ></el-button>
-                            </el-button-group>
+                            </el-button-group>-->
                             <el-color-picker
                                 value="transparent"
                                 class="btn-text can-hover mar-l-5"
@@ -360,15 +366,26 @@
 import { fabric } from "fabric";
 import {
     ToolEllipse,
-    ToolRect,
+    RectTool,
     Arrowline,
     Pencil,
     Mosaic,
     ToolText
 } from "./tool/index";
 import { HISTORY } from "./tool/common";
+import SizePicker from "./sizePicker";
+import ToolBar from "./ToolBar";
 
 export default {
+    components: {
+        SizePicker,
+        ToolBar
+    },
+    provide() {
+        return {
+            canvas: this
+        };
+    },
     data() {
         return {
             canvas: null,
@@ -379,7 +396,7 @@ export default {
                     obj: null,
                     active: false,
                     getInst: canvas => {
-                        return new ToolRect(canvas);
+                        return new RectTool(canvas);
                     }
                 },
                 ellipse: {
@@ -638,7 +655,7 @@ export default {
                 img.scaleToWidth(800);
                 this.canvas.add(img).centerObject(img);
             });
-            this.canvas.backgroundColor = "#000000";
+            this.canvas.backgroundColor = "#1e1f1c";
         },
         openUrl() {
             this.$prompt("请输入图片地址", "提示", {

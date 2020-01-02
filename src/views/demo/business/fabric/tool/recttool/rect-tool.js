@@ -1,11 +1,11 @@
-import { brforeDraw, drew, HISTORY } from "./common";
+import { brforeDraw, drew, HISTORY } from "../common";
 
 /**
  * @description 矩形工具类
  * @author tanglv
  * @date 2019-12-10
  */
-function ToolRect(canvas) {
+function RectTool(canvas) {
     if (!canvas) {
         throw "canvas is required";
     }
@@ -20,7 +20,7 @@ function ToolRect(canvas) {
     this.size = 1; //矩形描边大小
     this.color = "red"; //矩形描边颜色
 }
-ToolRect.prototype.onWork = function() {
+RectTool.prototype.onWork = function() {
     let _this = this;
     brforeDraw(this.canvas);
     this.canvas.on("mouse:down", function tmpMouseDown(o) {
@@ -36,7 +36,7 @@ ToolRect.prototype.onWork = function() {
         _this.mouseUpEvent = tmpMouseUp;
     });
 };
-ToolRect.prototype.offWork = function() {
+RectTool.prototype.offWork = function() {
     this.canvas.hoverCursor = "move";
     this.canvas.item(0).selectable = true;
     this.canvas.off("mouse:down", this.mouseDownEvent);
@@ -44,7 +44,7 @@ ToolRect.prototype.offWork = function() {
     this.canvas.off("mouse:up", this.mouseUpEvent);
 };
 
-ToolRect.prototype.onMouseDown = function(o) {
+RectTool.prototype.onMouseDown = function(o) {
     this.isDrawing = true;
     var pointer = this.canvas.getPointer(o.e);
     this.origX = pointer.x;
@@ -67,7 +67,7 @@ ToolRect.prototype.onMouseDown = function(o) {
     HISTORY.push(this.rect.customId);
     this.rect.bringToFront(); //将对象移动至顶层，防止被遮盖
 };
-ToolRect.prototype.onMouseMove = function(o) {
+RectTool.prototype.onMouseMove = function(o) {
     if (!this.isDrawing) return;
     let pointer = this.canvas.getPointer(o.e);
 
@@ -91,21 +91,21 @@ ToolRect.prototype.onMouseMove = function(o) {
 
     this.canvas.renderAll();
 };
-ToolRect.prototype.onMouseUp = function(o) {
+RectTool.prototype.onMouseUp = function(o) {
     this.isDrawing = false;
     drew(this.canvas);
 };
-ToolRect.prototype.setSize = function(size) {
+RectTool.prototype.setSize = function(size) {
     if (!size) {
         throw "Rect setSize must pass size param.";
     }
     this.size = size;
 };
-ToolRect.prototype.setColor = function(color) {
+RectTool.prototype.setColor = function(color) {
     if (!color) {
         throw "Rect setColor must pass color param.";
     }
     this.color = color;
 };
 
-export { ToolRect };
+export { RectTool };
