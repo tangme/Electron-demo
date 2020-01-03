@@ -1,11 +1,11 @@
-import { brforeDraw, drew, HISTORY } from "./common";
+import { brforeDraw, drew, HISTORY } from "../common";
 
 /**
  * @description 箭头工具 类
  * @author tanglv
  * @date 2019-12-13
  */
-function Arrowline(canvas) {
+function ArrowLineTool(canvas) {
     if (!canvas) {
         throw "canvas is required";
     }
@@ -23,7 +23,7 @@ function Arrowline(canvas) {
     this.size = 1; //箭头大小
     this.color = "red"; //箭头颜色
 }
-Arrowline.prototype.onWork = function() {
+ArrowLineTool.prototype.onWork = function() {
     brforeDraw(this.canvas);
     let _this = this;
     this.canvas.on("mouse:down", function tmpMouseDown(o) {
@@ -39,7 +39,7 @@ Arrowline.prototype.onWork = function() {
         _this.mouseUpEvent = tmpMouseUp;
     });
 };
-Arrowline.prototype.offWork = function() {
+ArrowLineTool.prototype.offWork = function() {
     this.canvas.hoverCursor = "move";
     this.canvas.item(0).selectable = true;
     this.canvas.off("mouse:down", this.mouseDownEvent);
@@ -47,7 +47,7 @@ Arrowline.prototype.offWork = function() {
     this.canvas.off("mouse:up", this.mouseUpEvent);
 };
 
-Arrowline.prototype.onMouseDown = function(o) {
+ArrowLineTool.prototype.onMouseDown = function(o) {
     this.isDrawing = true;
     let pointer = this.canvas.getPointer(o.e);
     let points = [pointer.x, pointer.y, pointer.x, pointer.y];
@@ -88,7 +88,7 @@ Arrowline.prototype.onMouseDown = function(o) {
 
     // this.canvas.add(ellipse).setActiveObject(ellipse);
 };
-Arrowline.prototype.onMouseMove = function(o) {
+ArrowLineTool.prototype.onMouseMove = function(o) {
     if (!this.isDrawing) return;
     let pointer = this.canvas.getPointer(o.e);
     // let activeObj = this.canvas.getActiveObject();
@@ -110,17 +110,17 @@ Arrowline.prototype.onMouseMove = function(o) {
     // this.ellipse.setCoords();
     this.canvas.renderAll();
 };
-Arrowline.prototype.onMouseUp = function(o) {
+ArrowLineTool.prototype.onMouseUp = function(o) {
     this.isDrawing = false;
     drew(this.canvas);
 };
-Arrowline.prototype.setSize = function(size) {
+ArrowLineTool.prototype.setSize = function(size) {
     if (!size) {
         throw "Rect setSize must pass size param.";
     }
     this.size = size;
 };
-Arrowline.prototype.setColor = function(color) {
+ArrowLineTool.prototype.setColor = function(color) {
     if (!color) {
         throw "Rect setColor must pass color param.";
     }
@@ -148,4 +148,4 @@ var _FabricCalcArrowAngle = function(x1, y1, x2, y2) {
     return (angle * 180) / Math.PI + 90;
 };
 
-export { Arrowline };
+export { ArrowLineTool };

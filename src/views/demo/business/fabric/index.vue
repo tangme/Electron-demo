@@ -365,12 +365,12 @@
 <script>
 import { fabric } from "fabric";
 import {
-    ToolEllipse,
+    EllipseTool,
     RectTool,
-    Arrowline,
-    Pencil,
-    Mosaic,
-    ToolText
+    ArrowLineTool,
+    PencilTool,
+    MosaicTool,
+    TextTool
 } from "./tool/index";
 import { HISTORY } from "./tool/common";
 import SizePicker from "./sizePicker";
@@ -403,35 +403,35 @@ export default {
                     obj: null,
                     active: false,
                     getInst: canvas => {
-                        return new ToolEllipse(canvas);
+                        return new EllipseTool(canvas);
                     }
                 },
                 arrowline: {
                     obj: null,
                     active: false,
                     getInst: canvas => {
-                        return new Arrowline(canvas);
+                        return new ArrowLineTool(canvas);
                     }
                 },
                 pencil: {
                     obj: null,
                     active: false,
                     getInst: canvas => {
-                        return new Pencil(canvas);
+                        return new PencilTool(canvas);
                     }
                 },
                 mosaic: {
                     obj: null,
                     active: false,
                     getInst: canvas => {
-                        return new Mosaic(canvas);
+                        return new MosaicTool(canvas);
                     }
                 },
                 text: {
                     obj: null,
                     active: false,
                     getInst: canvas => {
-                        return new ToolText(canvas);
+                        return new TextTool(canvas);
                     }
                 }
             },

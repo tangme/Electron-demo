@@ -13,7 +13,7 @@
     </div>
 </template>
 <script>
-import RectTool from "./tool/recttool";
+import RectTool from "./tool/rect";
 export default {
     name: "ToolBar",
     components: {

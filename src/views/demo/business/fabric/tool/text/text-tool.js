@@ -1,6 +1,6 @@
-import { brforeDraw, drew, HISTORY } from "./common";
+import { brforeDraw, drew, HISTORY } from "../common";
 
-function ToolText(canvas) {
+function TextTool(canvas) {
     if (!canvas) {
         throw "canvas is required";
     }
@@ -9,7 +9,7 @@ function ToolText(canvas) {
     this.size = 12; //字体大小
     this.mouseDownEvent = null;
 }
-ToolText.prototype.onWork = function() {
+TextTool.prototype.onWork = function() {
     brforeDraw(this.canvas);
     let _this = this;
     this.canvas.on("mouse:down", function tmpMouseDown(o) {
@@ -17,13 +17,13 @@ ToolText.prototype.onWork = function() {
         _this.mouseDownEvent = tmpMouseDown;
     });
 };
-ToolText.prototype.offWork = function() {
+TextTool.prototype.offWork = function() {
     this.canvas.off("mouse:down", this.mouseDownEvent);
     drew(this.canvas);
     this.canvas.hoverCursor = "move";
     this.canvas.item(0).selectable = true;
 };
-ToolText.prototype.onMouseDown = function(o) {
+TextTool.prototype.onMouseDown = function(o) {
     if (!o.target || o.target.get("type") != "i-text") {
         var pointer = this.canvas.getPointer(o.e);
         this.origX = pointer.x;
@@ -44,7 +44,7 @@ ToolText.prototype.onMouseDown = function(o) {
         // text.hiddenTextarea.focus();
     }
 };
-ToolText.prototype.setColor = function(color) {
+TextTool.prototype.setColor = function(color) {
     if (!color) {
         throw "Rect setColor must pass color param.";
     }
@@ -56,7 +56,7 @@ ToolText.prototype.setColor = function(color) {
         this.canvas.renderAll();
     }
 };
-ToolText.prototype.setSize = function(size) {
+TextTool.prototype.setSize = function(size) {
     if (!size) {
         throw "Rect setSize must pass size param.";
     }
@@ -68,4 +68,4 @@ ToolText.prototype.setSize = function(size) {
         this.canvas.renderAll();
     }
 };
-export { ToolText };
+export { TextTool };

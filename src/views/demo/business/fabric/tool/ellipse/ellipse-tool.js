@@ -1,4 +1,4 @@
-import { brforeDraw, drew, HISTORY } from "./common";
+import { brforeDraw, drew, HISTORY } from "../common";
 
 /**
  * @description 椭圆工具类
@@ -6,7 +6,7 @@ import { brforeDraw, drew, HISTORY } from "./common";
  * @date 2019-12-10
  */
 
-function ToolEllipse(canvas) {
+function EllipseTool(canvas) {
     if (!canvas) {
         throw "canvas is required";
     }
@@ -21,7 +21,7 @@ function ToolEllipse(canvas) {
     this.size = 1; //椭圆描边大小
     this.color = "red"; //椭圆描边颜色
 }
-ToolEllipse.prototype.onWork = function() {
+EllipseTool.prototype.onWork = function() {
     let _this = this;
     brforeDraw(this.canvas);
     this.canvas.on("mouse:down", function tmpMouseDown(o) {
@@ -37,7 +37,7 @@ ToolEllipse.prototype.onWork = function() {
         _this.mouseUpEvent = tmpMouseUp;
     });
 };
-ToolEllipse.prototype.offWork = function() {
+EllipseTool.prototype.offWork = function() {
     this.canvas.hoverCursor = "move";
     this.canvas.item(0).selectable = true;
     this.canvas.off("mouse:down", this.mouseDownEvent);
@@ -45,7 +45,7 @@ ToolEllipse.prototype.offWork = function() {
     this.canvas.off("mouse:up", this.mouseUpEvent);
 };
 
-ToolEllipse.prototype.onMouseDown = function(o) {
+EllipseTool.prototype.onMouseDown = function(o) {
     this.isDrawing = true;
     let pointer = this.canvas.getPointer(o.e);
     this.origX = pointer.x;
@@ -67,7 +67,7 @@ ToolEllipse.prototype.onMouseDown = function(o) {
     HISTORY.push(this.ellipse.customId);
     this.canvas.add(this.ellipse);
 };
-ToolEllipse.prototype.onMouseMove = function(o) {
+EllipseTool.prototype.onMouseMove = function(o) {
     if (!this.isDrawing) return;
     let pointer = this.canvas.getPointer(o.e);
 
@@ -104,21 +104,21 @@ ToolEllipse.prototype.onMouseMove = function(o) {
     // this.ellipse.setCoords();
     this.canvas.renderAll();
 };
-ToolEllipse.prototype.onMouseUp = function(o) {
+EllipseTool.prototype.onMouseUp = function(o) {
     this.isDrawing = false;
     drew(this.canvas);
 };
-ToolEllipse.prototype.setSize = function(size) {
+EllipseTool.prototype.setSize = function(size) {
     if (!size) {
         throw "Rect setSize must pass size param.";
     }
     this.size = size;
 };
-ToolEllipse.prototype.setColor = function(color) {
+EllipseTool.prototype.setColor = function(color) {
     if (!color) {
         throw "Rect setColor must pass color param.";
     }
     this.color = color;
 };
 
-export { ToolEllipse };
+export { EllipseTool };

@@ -1,11 +1,11 @@
-import { brforeDraw, drew, HISTORY } from "./common";
+import { brforeDraw, drew, HISTORY } from "../common";
 
 /**
  * @description 画笔工具类
  * @author tanglv
  * @date 2019-12-10
  */
-function Pencil(canvas) {
+function PencilTool(canvas) {
     if (!canvas) {
         throw "canvas is required";
     }
@@ -15,7 +15,7 @@ function Pencil(canvas) {
     this.pathCreated = null;
 }
 
-Pencil.prototype.onWork = function() {
+PencilTool.prototype.onWork = function() {
     brforeDraw(this.canvas);
     this.canvas.freeDrawingBrush = new fabric["PencilBrush"](this.canvas);
     this.canvas.isDrawingMode = true;
@@ -28,12 +28,12 @@ Pencil.prototype.onWork = function() {
     });
 };
 
-Pencil.prototype.onPathCreated = function(o) {
+PencilTool.prototype.onPathCreated = function(o) {
     o.path.customId = Date.now();
     HISTORY.push(o.path.customId);
 };
 
-Pencil.prototype.offWork = function() {
+PencilTool.prototype.offWork = function() {
     this.canvas.isDrawingMode = false;
     this.canvas.off("path:created", this.pathCreated);
     drew(this.canvas);
@@ -41,18 +41,18 @@ Pencil.prototype.offWork = function() {
     this.canvas.item(0).selectable = true;
 };
 
-Pencil.prototype.setSize = function(size) {
+PencilTool.prototype.setSize = function(size) {
     if (!size) {
-        throw "Pencil setSize must pass size param.";
+        throw "PencilTool setSize must pass size param.";
     }
     this.canvas.freeDrawingBrush.width = this.size = size;
 };
 
-Pencil.prototype.setColor = function(color) {
+PencilTool.prototype.setColor = function(color) {
     if (!color) {
-        throw "Pencil setColor must pass color param.";
+        throw "PencilTool setColor must pass color param.";
     }
     this.canvas.freeDrawingBrush.color = this.color = color;
 };
 
-export { Pencil };
+export { PencilTool };

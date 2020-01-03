@@ -1,4 +1,4 @@
-import { brforeDraw, drew, HISTORY } from "./common";
+import { brforeDraw, drew, HISTORY } from "../common";
 
 /**
  * @description 马赛克工具类
@@ -6,7 +6,7 @@ import { brforeDraw, drew, HISTORY } from "./common";
  * @date 2019-12-24
  * @param {*} canvas
  */
-function Mosaic(canvas) {
+function MosaicTool(canvas) {
     if (!canvas) {
         throw "canvas is required";
     }
@@ -16,7 +16,7 @@ function Mosaic(canvas) {
     this.canvas.freeDrawingBrush.color = "red";
     this.pathCreated = null;
 }
-Mosaic.prototype.onWork = function() {
+MosaicTool.prototype.onWork = function() {
     const _this = this;
     this.canvas.on("path:created", function tmpPathCreated(o) {
         _this.onPathCreated(o);
@@ -29,26 +29,26 @@ Mosaic.prototype.onWork = function() {
     this.canvas.freeDrawingBrush.color = "green";
     this.canvas.freeDrawingBrush.width = 12;
 };
-Mosaic.prototype.offWork = function() {
+MosaicTool.prototype.offWork = function() {
     this.canvas.isDrawingMode = false;
     this.canvas.off("path:created", this.pathCreated);
     drew(this.canvas);
     this.canvas.hoverCursor = "move";
     this.canvas.item(0).selectable = true;
 };
-Mosaic.prototype.onPathCreated = function(o) {
+MosaicTool.prototype.onPathCreated = function(o) {
     o.path.customId = Date.now();
     HISTORY.push(o.path.customId);
 };
-Mosaic.prototype.setWidth = function(width) {
+MosaicTool.prototype.setWidth = function(width) {
     if (!width) {
-        throw "Mosaic setWidth must pass width param.";
+        throw "MosaicTool setWidth must pass width param.";
     }
     this.canvas.freeDrawingBrush.width = this.width = width;
 };
-Mosaic.prototype.setColor = function(color) {
+MosaicTool.prototype.setColor = function(color) {
     if (!color) {
-        throw "Mosaic setColor must pass color param.";
+        throw "MosaicTool setColor must pass color param.";
     }
     this.canvas.freeDrawingBrush.color = this.color = color;
 };
@@ -222,4 +222,4 @@ function gaussBlur(imgData) {
     return imgData;
 }
 
-export { Mosaic };
+export { MosaicTool };

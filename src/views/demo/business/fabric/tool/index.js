@@ -1,8 +1,15 @@
-import { ToolEllipse } from "./ellipse";
-import { RectTool } from "./recttool/rect-tool";
-import { Arrowline } from "./arrowline";
-import { Pencil } from "./pencil";
-import { Mosaic } from "./mosaic";
-import { ToolText } from "./text";
+import { EllipseTool } from "./ellipse/ellipse-tool";
+import { RectTool } from "./rect/rect-tool";
+import { ArrowLineTool } from "./arrowline/arrowline-tool";
+import { PencilTool } from "./pencil/pencil-tool";
+import { MosaicTool } from "./mosaic/mosaic-tool";
+import { TextTool } from "./text/text-tool";
 
-export { ToolEllipse, RectTool, Arrowline, Pencil, Mosaic, ToolText };
+export {
+    EllipseTool,
+    RectTool,
+    ArrowLineTool,
+    PencilTool,
+    MosaicTool,
+    TextTool
+};
