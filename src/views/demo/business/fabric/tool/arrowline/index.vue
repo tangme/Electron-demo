@@ -15,6 +15,7 @@
             slot="reference"
             :type="tool.active ? 'primary' : ''"
             icon="fa fa-long-arrow-right"
+            class="n-e-arrow"
             title="箭头工具"
             @click="toggleTool"
         ></el-button>

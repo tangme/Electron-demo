@@ -13,6 +13,8 @@
             <pencil-tool></pencil-tool>
             <mosaic-tool></mosaic-tool>
             <text-tool></text-tool>
+            <undo-tool></undo-tool>
+            <file-tool></file-tool>
         </el-button-group>
     </div>
 </template>
@@ -23,6 +25,9 @@ import ArrowlineTool from "./tool/arrowline";
 import PencilTool from "./tool/pencil";
 import MosaicTool from "./tool/mosaic";
 import TextTool from "./tool/text";
+import FileTool from "./tool/file";
+import UndoTool from "./tool/undo";
+
 export default {
     name: "ToolBar",
     components: {
@@ -31,7 +36,9 @@ export default {
         ArrowlineTool,
         PencilTool,
         MosaicTool,
-        TextTool
+        TextTool,
+        FileTool,
+        UndoTool
     },
     provide() {
         return {
@@ -50,13 +57,13 @@ export default {
         offAllTool(notOffObj) {
             if (notOffObj) {
                 this.$children[0].$children.forEach(item => {
-                    if (notOffObj !== item) {
+                    if (notOffObj !== item && item.offActive) {
                         item.offActive();
                     }
                 });
             } else {
                 this.$children[0].$children.forEach(item => {
-                    item.offActive();
+                    item.offActive && item.offActive();
                 });
             }
         }
