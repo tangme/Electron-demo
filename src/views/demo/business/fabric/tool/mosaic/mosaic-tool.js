@@ -11,7 +11,7 @@ function MosaicTool(canvas) {
         throw "canvas is required";
     }
     this.canvas = canvas;
-    this.width = 12;
+    this.size = 12;
     this.color = "red";
     this.canvas.freeDrawingBrush.color = "red";
     this.pathCreated = null;
@@ -40,11 +40,11 @@ MosaicTool.prototype.onPathCreated = function(o) {
     o.path.customId = Date.now();
     HISTORY.push(o.path.customId);
 };
-MosaicTool.prototype.setWidth = function(width) {
-    if (!width) {
-        throw "MosaicTool setWidth must pass width param.";
+MosaicTool.prototype.setSize = function(size) {
+    if (!size) {
+        throw "MosaicTool setSize must pass size param.";
     }
-    this.canvas.freeDrawingBrush.width = this.width = width;
+    this.canvas.freeDrawingBrush.width = this.size = size;
 };
 MosaicTool.prototype.setColor = function(color) {
     if (!color) {

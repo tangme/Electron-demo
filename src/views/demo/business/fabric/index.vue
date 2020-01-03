@@ -241,18 +241,18 @@
                                     size="mini"
                                     icon="fa fa-circle"
                                     class="mini-circle"
-                                    @click="toolBtns.mosaic.obj.setWidth(12)"
+                                    @click="toolBtns.mosaic.obj.setSize(12)"
                                 ></el-button>
                                 <el-button
                                     size="mini"
                                     icon="fa fa-circle"
-                                    @click="toolBtns.mosaic.obj.setWidth(22)"
+                                    @click="toolBtns.mosaic.obj.setSize(22)"
                                 ></el-button>
                                 <el-button
                                     size="mini"
                                     icon="fa fa-circle"
                                     class="max-circle"
-                                    @click="toolBtns.mosaic.obj.setWidth(32)"
+                                    @click="toolBtns.mosaic.obj.setSize(32)"
                                 ></el-button>
                             </el-button-group>
                             <el-color-picker

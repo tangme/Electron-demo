@@ -8,16 +8,30 @@
     <div class="toolbar-wrap">
         <el-button-group>
             <rect-tool></rect-tool>
-            <rect-tool></rect-tool>
+            <ellipse-tool></ellipse-tool>
+            <arrowline-tool></arrowline-tool>
+            <pencil-tool></pencil-tool>
+            <mosaic-tool></mosaic-tool>
+            <text-tool></text-tool>
         </el-button-group>
     </div>
 </template>
 <script>
 import RectTool from "./tool/rect";
+import EllipseTool from "./tool/ellipse";
+import ArrowlineTool from "./tool/arrowline";
+import PencilTool from "./tool/pencil";
+import MosaicTool from "./tool/mosaic";
+import TextTool from "./tool/text";
 export default {
     name: "ToolBar",
     components: {
-        RectTool
+        RectTool,
+        EllipseTool,
+        ArrowlineTool,
+        PencilTool,
+        MosaicTool,
+        TextTool
     },
     provide() {
         return {
