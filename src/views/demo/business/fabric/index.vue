@@ -1,10 +1,8 @@
 <style>
 .canvas-wrap {
-    border: 1px dashed;
+    /* border: 1px dashed; */
 }
 .canvas-container {
-    margin: auto;
-    border: 1px dashed red;
 }
 
 .mini-circle > .fa.fa-circle {
@@ -39,8 +37,8 @@
 </style>
 <template>
     <div>
-        <div class="canvas-wrap">
-            <canvas id="canvas" width="800" height="600"></canvas>
+        <div ref="canvaswrap" class="canvas-wrap">
+            <canvas id="canvas" height="600"></canvas>
             <tool-bar></tool-bar>
         </div>
         <img id="my-image" src="/image/theme/d2/logo/all.png" />
@@ -77,7 +75,11 @@ export default {
     },
     created() {},
     mounted() {
+        console.log(getComputedStyle(this.$refs.canvaswrap)["width"]);
         this.canvas = new fabric.Canvas("canvas", { selection: false });
+        this.canvas.setWidth(
+            parseInt(getComputedStyle(this.$refs.canvaswrap)["width"])
+        );
 
         //添加默认图片
         this.loadFromUrl(this.defaultImg);
@@ -118,7 +120,7 @@ export default {
          */
         reset() {
             this.canvas.clear();
-            this.canvas.backgroundColor = "#1e1f1c";
+            this.canvas.backgroundColor = "#1f2430";
         },
         loadFromUrl(url) {
             this.reset();

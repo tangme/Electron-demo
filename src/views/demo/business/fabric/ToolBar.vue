@@ -1,6 +1,7 @@
 <style>
 .toolbar-wrap {
-    background: #272822;
+    position: relative;
+    background: #fafafa;
     padding: 5px;
 }
 </style>
