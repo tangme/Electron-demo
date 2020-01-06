@@ -62,7 +62,7 @@ export default {
         {
             path: "fabric",
             name: `${pre}fabric`,
-            component: _import("demo/business/fabric"),
+            component: _import("demo/business/fabric/masterphoto-demo"),
             props: true,
             meta: {
                 ...meta,

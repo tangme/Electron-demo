@@ -7,8 +7,8 @@
 // https://highlightjs.org/usage/
 // http://highlightjs.readthedocs.io/en/latest/api.html#configure-options
 import highlight from 'highlight.js'
-import '../highlight-styles/github-gist.css'
 import htmlFormat from './libs/htmlFormat'
+import './libs/style.github.css'
 export default {
   name: 'd2-highlight',
   props: {

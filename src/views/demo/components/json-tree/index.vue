@@ -5,7 +5,10 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import vueJsonTreeView from 'vue-json-tree-view'
 import packJson from '../../../../../package.json'
+Vue.use(vueJsonTreeView)
 export default {
   data () {
     return {

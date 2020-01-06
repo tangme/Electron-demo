@@ -10,7 +10,7 @@
                     >开源组织</span> |
                     <span
                         class="btn-group__btn"
-                        @click="$open('https://fairyever.com/d2-admin/doc/zh/')"
+                        @click="$open('https://d2.pub/zh/doc/d2-admin')"
                     >文档</span> |
                     <span
                         class="btn-group__btn"
@@ -20,7 +20,6 @@
                         class="btn-group__btn"
                         @click="$open('https://juejin.im/user/57a48b632e958a006691b946/posts')"
                     >掘金</span> |
-                    <span class="btn-group__btn" @click="$open('https://daily.fairyever.com')">日报</span> |
                     <el-popover :width="172" trigger="hover">
                         <p class="d2-mt-0 d2-mb-10">今日前端</p>
                         <img src="./image/qr@2x.png" style="width: 172px;" />
@@ -33,7 +32,7 @@
                     </el-popover>
                 </div>
                 <!-- <d2-badge/> -->
-                <d2-help />
+                <!-- <d2-help/> -->
             </template>
         </d2-page-cover>
     </d2-container>

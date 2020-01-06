@@ -1,8 +1,8 @@
 <style>
 .canvas-wrap {
-    /* border: 1px dashed; */
 }
 .canvas-container {
+    /* fabric 自带容器类名 */
 }
 
 .mini-circle > .fa.fa-circle {
@@ -37,15 +37,10 @@
 </style>
 <template>
     <div>
-        <div ref="canvaswrap" class="canvas-wrap">
-            <canvas id="canvas" height="600"></canvas>
-            <tool-bar></tool-bar>
+        <div ref="canvaswrap" class="canvas-wrap" :style="{width:width,height:height}">
+            <canvas id="canvas"></canvas>
+            <tool-bar ref="toolbar"></tool-bar>
         </div>
-        <img id="my-image" src="/image/theme/d2/logo/all.png" />
-        <img
-            id="tanglv"
-            src="https://aier-picture-1259589318.cos.ap-chengdu.myqcloud.com/100630100630/1155667283780395010/MZ201912040002/topography_A88J0U2Q.png"
-        />
     </div>
 </template>
 <script>
@@ -53,7 +48,7 @@ import { fabric } from "fabric";
 import ToolBar from "./ToolBar";
 
 export default {
-    name: "TPhone",
+    name: "MasterPhone",
     components: {
         ToolBar
     },
@@ -63,9 +58,16 @@ export default {
         };
     },
     props: {
-        defaultImg: {
+        src: {
+            type: String
+        },
+        width: {
             type: String,
-            default: "/image/testedit.jpg"
+            default: "100%"
+        },
+        height: {
+            type: String,
+            default: "100%"
         }
     },
     data() {
@@ -75,14 +77,21 @@ export default {
     },
     created() {},
     mounted() {
-        console.log(getComputedStyle(this.$refs.canvaswrap)["width"]);
+        let css_canvas_wrap = getComputedStyle(this.$refs.canvaswrap);
+        let css_toolbar = getComputedStyle(this.$refs.toolbar.$el);
         this.canvas = new fabric.Canvas("canvas", { selection: false });
-        this.canvas.setWidth(
-            parseInt(getComputedStyle(this.$refs.canvaswrap)["width"])
+        //画布宽度 同 容器宽度
+        this.canvas.setWidth(parseInt(css_canvas_wrap["width"]));
+        //画布高度 同 容器高度-工具条高度
+        this.canvas.setHeight(
+            parseInt(css_canvas_wrap["height"]) -
+                parseInt(css_toolbar["height"]) -
+                parseInt(css_toolbar["padding-bottom"]) -
+                parseInt(css_toolbar["padding-top"])
         );
 
         //添加默认图片
-        this.loadFromUrl(this.defaultImg);
+        this.src && this.loadFromUrl(this.src);
 
         // 通过url 设置背景图片
         /* this.canvas.setBackgroundImage(

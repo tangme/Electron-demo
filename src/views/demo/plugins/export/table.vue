@@ -23,8 +23,10 @@
 </template>
 
 <script>
-// 假数据
+import Vue from 'vue'
+import pluginExport from '@d2-projects/vue-table-export'
 import table from './data'
+Vue.use(pluginExport)
 export default {
   data () {
     return {

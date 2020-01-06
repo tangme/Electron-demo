@@ -2,38 +2,23 @@
   <div class="d2-multiple-page-control-group" flex>
     <div class="d2-multiple-page-control-content" flex-box="1">
       <div class="d2-multiple-page-control-content-inner">
-        <d2-contextmenu
-          :visible.sync="contextmenuFlag"
-          :x="contentmenuX"
-          :y="contentmenuY">
-          <d2-contextmenu-list
-            :menulist="tagName === '/index' ? contextmenuListIndex : contextmenuList"
-            @rowClick="contextmenuClick"/>
+        <d2-contextmenu :visible.sync="contextmenuFlag" :x="contentmenuX" :y="contentmenuY">
+          <d2-contextmenu-list :menulist="tagName === '/index' ? contextmenuListIndex : contextmenuList" @rowClick="contextmenuClick"/>
         </d2-contextmenu>
         <el-tabs
-          class="d2-multiple-page-control"
+          class="d2-multiple-page-control d2-multiple-page-sort"
           :value="current"
           type="card"
           :closable="true"
           @tab-click="handleClick"
           @edit="handleTabsEdit"
           @contextmenu.native="handleContextmenu">
-          <el-tab-pane
-            v-for="page in opened"
-            :key="page.fullPath"
-            :label="page.meta.title || '未命名'"
-            :name="page.fullPath"/>
+          <el-tab-pane v-for="page in opened" :key="page.fullPath" :label="page.meta.title || '未命名'" :name="page.fullPath"/>
         </el-tabs>
       </div>
     </div>
-    <div
-      class="d2-multiple-page-control-btn"
-      flex-box="0">
-      <el-dropdown
-        size="default"
-        split-button
-        @click="closeAll"
-        @command="command => handleControlItemClick(command)">
+    <div class="d2-multiple-page-control-btn" flex-box="0">
+      <el-dropdown size="default" split-button @click="closeAll" @command="command => handleControlItemClick(command)">
         <d2-icon name="times-circle"/>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="left">
@@ -60,6 +45,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Sortable from 'sortablejs'
 export default {
   components: {
     D2Contextmenu: () => import('../contextmenu'),
@@ -94,7 +80,8 @@ export default {
       'closeLeft',
       'closeRight',
       'closeOther',
-      'closeAll'
+      'closeAll',
+      'openedSort'
     ]),
     /**
      * @description 右键菜单功能点击
@@ -172,6 +159,15 @@ export default {
         })
       }
     }
+  },
+  mounted () {
+    const el = document.querySelectorAll('.d2-multiple-page-sort .el-tabs__nav')[0]
+    Sortable.create(el, {
+      onEnd: (evt) => {
+        const { oldIndex, newIndex } = evt
+        this.openedSort({ oldIndex, newIndex })
+      }
+    })
   }
 }
 </script>
